@@ -1,0 +1,17 @@
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Agent 工作区（非项目文件）
+.workbuddy/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 日志
+*.log

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>传感器对决 · OS08B10 vs IMX585 · 深空视角</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080a; --surface:#0e0e10; --card:#141416; --muted-bg:#1a1a1e;
+  --border:#2a2a30; --border-soft:#222226;
+  --text:#e8e4dd; --text-2:#9e9890; --text-3:#8d8780;
+  --accent:#e64a40; --accent-soft:rgba(230,74,64,.12);
+  --sony:#86b07e;  --sony-soft:rgba(134,176,126,.12);
+  --ovt:#d9882e;   --ovt-soft:rgba(217,136,46,.12);
+  --purple:#9b8ec4;
+  --shadow:0 26px 64px -28px rgba(0,0,0,.85);
+  --r:16px;
+  --font-ui:"Geist",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:"Geist Mono","JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:var(--font-ui);font-size:14px;line-height:1.65;
+  background:
+    radial-gradient(1100px 720px at 6% -10%, rgba(230,74,64,.13), transparent 55%),
+    radial-gradient(1000px 800px at 106% 2%, rgba(217,136,46,.11), transparent 55%),
+    radial-gradient(940px 940px at 50% 120%, rgba(134,176,126,.10), transparent 60%),
+    linear-gradient(180deg,#0c0c0f,#08080a);
+  background-attachment:fixed;
+  padding:42px 22px 96px;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.bg-stars{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.22;
+  background-image:
+    radial-gradient(1.3px 1.3px at 18% 28%, rgba(232,228,221,.7), transparent),
+    radial-gradient(1.1px 1.1px at 72% 18%, rgba(232,228,221,.5), transparent),
+    radial-gradient(1.5px 1.5px at 42% 68%, rgba(232,228,221,.6), transparent),
+    radial-gradient(1px 1px at 86% 58%, rgba(232,228,221,.45), transparent),
+    radial-gradient(1.3px 1.3px at 56% 44%, rgba(232,228,221,.5), transparent),
+    radial-gradient(1px 1px at 8% 82%, rgba(232,228,221,.4), transparent);
+  background-repeat:repeat;background-size:560px 560px;}
+.wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;}
+
+/* ---------- header ---------- */
+.brand-badge{display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--text-2);border:1px solid var(--border);background:var(--card);
+  padding:6px 13px;border-radius:999px;margin-bottom:16px;}
+.brand-badge b{color:var(--ovt);font-weight:600;}
+.brand-badge i{color:var(--sony);font-style:normal;font-weight:600;}
+header h1{font-size:clamp(25px,4vw,38px);font-weight:700;margin:0 0 10px;
+  letter-spacing:.2px;line-height:1.15;
+  background:linear-gradient(92deg,#ffffff 8%, #f3c9a4 48%, #b9d4b2 92%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+header .sub{color:var(--text-2);font-size:13.5px;margin:0 0 22px;max-width:820px;}
+.stats{display:flex;flex-wrap:wrap;gap:12px;}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:13px 17px;min-width:120px;transition:transform .2s,border-color .2s;}
+.stat:hover{transform:translateY(-2px);border-color:#3a3a42;}
+.stat .n{font-family:var(--font-mono);font-size:21px;font-weight:600;line-height:1.1;}
+.stat .n.draw{color:var(--text-2);}
+.stat .n.win{color:var(--sony);}
+.stat .l{font-size:11.5px;color:var(--text-2);margin-top:6px;letter-spacing:.4px;}
+
+/* ---------- evidence toggle ---------- */
+.evidence-bar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:13px 16px;margin:26px 0 20px;box-shadow:var(--shadow);}
+.evidence-bar .lbl{font-size:13px;color:var(--text-2);max-width:560px;}
+.evidence-bar .lbl b{color:var(--text);font-weight:600;}
+.switch{display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
+  font-size:13px;font-weight:500;color:var(--text);padding:8px 14px;
+  border:1px solid var(--ovt);border-radius:999px;background:var(--ovt-soft);
+  transition:color .2s,border-color .2s,background .2s;margin-left:auto;}
+.switch:hover{border-color:var(--ovt);}
+.switch input{position:absolute;opacity:0;width:0;height:0;}
+.switch .track{width:34px;height:19px;border-radius:999px;background:var(--muted-bg);
+  position:relative;transition:.25s;flex:none;}
+.switch .track::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;
+  background:#cfc9c0;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.5);}
+.switch input:checked + .track{background:var(--ovt);}
+.switch input:checked + .track::after{transform:translateX(15px);background:#fff;}
+.switch input:focus-visible + .track{box-shadow:0 0 0 3px var(--ovt-soft);}
+.badges{display:flex;flex-wrap:wrap;gap:8px;}
+.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);
+  font-size:10.5px;font-weight:600;letter-spacing:.6px;padding:3px 9px;border-radius:6px;
+  border:1px solid transparent;white-space:nowrap;}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;flex:none;}
+.badge.official{color:var(--text-2);border-color:var(--border);background:#121214;}
+.badge.official::before{background:var(--text-3);}
+.badge.measured{color:var(--sony);border-color:rgba(134,176,126,.4);background:var(--sony-soft);}
+.badge.measured::before{background:var(--sony);}
+.badge.inferred{color:var(--ovt);border-color:rgba(217,136,46,.4);background:var(--ovt-soft);}
+.badge.inferred::before{background:var(--ovt);}
+
+/* inferred fade (signature interaction) */
+.inferred,.inferred-row{transition:opacity .45s ease;}
+body.hide-inferred .inferred,body.hide-inferred .inferred-row{opacity:.12;}
+body.hide-inferred .radar-ovt{opacity:.1;}
+body.hide-inferred .band-ovt{opacity:.05;}
+
+/* ---------- section ---------- */
+section{margin-top:34px;}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.sec-head h2{font-size:18px;font-weight:600;margin:0;letter-spacing:.2px;}
+.sec-head .tag{font-family:var(--font-mono);font-size:10.5px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--text-3);}
+.sec-head .note{font-size:12.5px;color:var(--text-3);margin-left:auto;}
+
+/* ---------- verdict ---------- */
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;}
+.pillar{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px 20px;position:relative;overflow:hidden;}
+.pillar::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--sony);}
+.pillar.lose::before{background:var(--ovt);}
+.pillar h3{margin:0 0 7px;font-size:14.5px;font-weight:600;color:var(--text);}
+.pillar p{margin:0;font-size:12.8px;color:var(--text-2);}
+.pillar .k{font-family:var(--font-mono);color:var(--sony);font-weight:600;}
+.pillar.lose .k{color:var(--ovt);}
+.verdict-banner{background:linear-gradient(135deg,rgba(134,176,126,.10),rgba(134,176,126,.03) 55%),var(--surface);
+  border:1px solid rgba(134,176,126,.35);border-radius:var(--r);padding:20px 24px;margin-bottom:16px;
+  display:flex;flex-wrap:wrap;align-items:center;gap:18px;box-shadow:var(--shadow);}
+.verdict-banner .win-name{font-size:22px;font-weight:700;color:var(--sony);letter-spacing:.3px;}
+.verdict-banner .why{font-size:13.5px;color:var(--text-2);max-width:640px;}
+.verdict-banner .why b{color:var(--text);font-weight:600;}
+.verdict-banner .score{margin-left:auto;text-align:right;font-family:var(--font-mono);}
+.verdict-banner .score .s{font-size:26px;font-weight:600;color:var(--sony);}
+.verdict-banner .score .s small{font-size:14px;color:var(--ovt);font-weight:500;}
+
+/* ---------- charts grid ---------- */
+.charts-grid{display:grid;grid-template-columns:5fr 7fr;gap:16px;}
+@media(max-width:900px){.charts-grid{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px 22px;box-shadow:var(--shadow);}
+.card h3{margin:0 0 4px;font-size:14.5px;font-weight:600;}
+.card .cap{font-size:12px;color:var(--text-3);margin:0 0 16px;}
+.radar-wrap{display:flex;justify-content:center;}
+.radar-wrap svg{width:100%;max-width:430px;height:auto;}
+
+/* bar groups */
+.bgroup{margin-bottom:20px;}
+.bgroup:last-child{margin-bottom:0;}
+.bgroup .bh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px;}
+.bgroup .bh .t{font-size:13px;font-weight:600;}
+.bgroup .bh .u{font-family:var(--font-mono);font-size:10.5px;color:var(--text-3);letter-spacing:.4px;}
+.brow{display:grid;grid-template-columns:158px 1fr;gap:10px;align-items:center;margin-bottom:8px;}
+.brow .bl{font-size:12px;color:var(--text-2);text-align:right;line-height:1.35;}
+.brow .bl small{display:block;font-family:var(--font-mono);font-size:9.5px;color:var(--text-3);letter-spacing:.3px;}
+.track{position:relative;height:20px;background:#0a0a0c;border:1px solid var(--border-soft);border-radius:6px;overflow:hidden;}
+.fill{position:absolute;top:0;bottom:0;left:0;border-radius:5px 0 0 5px;
+  background:linear-gradient(90deg,rgba(134,176,126,.55),var(--sony));}
+.fill.ovt{background:linear-gradient(90deg,rgba(217,136,46,.5),var(--ovt));}
+.fill.dim{background:linear-gradient(90deg,rgba(157,152,148,.35),#6e6a64);}
+.fill.range{border-radius:0;opacity:.85;}
+.track .val{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--font-mono);
+  font-size:10.5px;font-weight:600;color:var(--text);white-space:nowrap;padding-left:7px;
+  text-shadow:0 1px 3px rgba(0,0,0,.9);}
+.brow .bl b{color:var(--text);}
+.bnote{font-size:11.5px;color:var(--text-3);margin-top:6px;}
+
+/* ---------- table ---------- */
+.table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);
+  background:var(--surface);box-shadow:var(--shadow);}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:880px;
+  font-size:12.8px;font-family:var(--font-mono);}
+th,td{padding:11px 15px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border-soft);}
+thead th{position:sticky;top:0;background:rgba(14,14,16,.97);z-index:2;}
+thead .grp-ovt,thead .grp-sony{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+  text-align:center;font-weight:600;padding:9px 12px;}
+thead .grp-ovt{color:var(--ovt);background:linear-gradient(180deg,var(--ovt-soft),transparent);}
+thead .grp-sony{color:var(--sony);background:linear-gradient(180deg,var(--sony-soft),transparent);}
+thead .model{font-family:var(--font-ui);font-size:14px;font-weight:600;padding:10px 15px;
+  border-top:2px solid transparent;}
+thead .model.ovt{color:var(--ovt);border-top-color:var(--ovt);}
+thead .model.sony{color:var(--sony);border-top-color:var(--sony);}
+thead .model small{display:block;font-family:var(--font-mono);font-size:9.5px;color:var(--text-3);
+  font-weight:500;letter-spacing:.4px;margin-top:3px;}
+tbody th{font-family:var(--font-ui);font-size:12.5px;font-weight:500;color:var(--text-2);
+  background:rgba(20,20,22,.6);white-space:nowrap;}
+tbody tr:hover td,tbody tr:hover th{background:rgba(255,255,255,.025);}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:none;}
+td .badge{margin-left:6px;}
+td.win{color:#cfe3c9;}
+td .num{color:var(--text);}
+td small{display:block;color:var(--text-3);font-size:10.5px;margin-top:3px;line-height:1.5;}
+
+/* ---------- QE chart ---------- */
+.qe-card svg{width:100%;height:auto;display:block;}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;}
+.legend .li{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text-2);}
+.legend .sw{width:22px;height:0;border-top:3px solid;flex:none;}
+.legend .sw.dash{border-top-style:dashed;}
+.legend .sw.band{height:12px;border:none;background:var(--ovt-soft);border:1px solid rgba(217,136,46,.4);}
+
+/* ---------- deep-sky cards ---------- */
+.ds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.ds{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;}
+.ds h3{margin:0 0 8px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.ds h3 .ic{font-size:15px;}
+.ds p{margin:0;font-size:12.6px;color:var(--text-2);}
+.ds p b{color:var(--text);font-weight:600;}
+.ds .mono{font-family:var(--font-mono);font-size:11.5px;}
+
+/* ---------- ecosystem ---------- */
+.eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.eco{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:17px 19px;
+  transition:transform .2s,border-color .2s;}
+.eco:hover{transform:translateY(-2px);border-color:rgba(134,176,126,.45);}
+.eco .en{font-size:14px;font-weight:600;margin:0 0 2px;}
+.eco .et{font-family:var(--font-mono);font-size:10.5px;color:var(--sony);letter-spacing:.6px;margin:0 0 9px;text-transform:uppercase;}
+.eco ul{margin:0;padding-left:16px;font-size:12.2px;color:var(--text-2);}
+.eco li{margin-bottom:3px;}
+.eco li b{color:var(--text);font-family:var(--font-mono);font-weight:600;font-size:11.8px;}
+.eco-empty{background:repeating-linear-gradient(135deg,var(--card),var(--card) 12px,#101013 12px,#101013 24px);
+  border:1px dashed var(--border);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;min-height:170px;grid-column:span 1;}
+.eco-empty .big{font-size:16px;font-weight:600;color:var(--ovt);}
+.eco-empty .sm{font-size:12px;color:var(--text-3);text-align:center;max-width:280px;}
+
+/* ---------- footer ---------- */
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--border);}
+footer .src{font-size:11.5px;color:var(--text-3);line-height:1.9;}
+footer .src a{color:var(--text-2);text-decoration:none;border-bottom:1px dotted var(--border);}
+footer .src a:hover{color:var(--text);border-bottom-color:var(--text-2);}
+footer .disc{margin-top:12px;padding:10px 14px;border:1px solid rgba(217,136,46,.3);
+  background:var(--ovt-soft);border-radius:10px;font-size:11.5px;color:var(--text-2);}
+footer .disc b{color:var(--ovt);}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;}
+}
+@media(max-width:640px){
+  body{padding:26px 14px 72px;}
+  .brow{grid-template-columns:112px 1fr;}
+  .brow .bl{font-size:11px;}
+  .switch{margin-left:0;}
+}
+</style>
+</head>
+<body>
+<div class="bg-stars"></div>
+<div class="wrap">
+
+<!-- ================= header ================= -->
+<header>
+  <div class="brand-badge">SENSOR DUEL · <b>OS08B10</b> OmniVision × <i>IMX585</i> Sony</div>
+  <h1>深空传感器对决：可验证性才是胜负手</h1>
+  <p class="sub">两者纸面规格几乎相同——4K、2.9 µm、彩色卷帘、单曝光动态范围同量级（90 dB vs 88–93 dB）。真正的差距在证据链：一方有实测曲线与成品相机，另一方停留在架构声明与推断区间。</p>
+  <div class="stats">
+    <div class="stat"><div class="n draw">2.9 µm</div><div class="l">像元 · 两者相同</div></div>
+    <div class="stat"><div class="n draw">4K</div><div class="l">3840×2160 · 两者相同</div></div>
+    <div class="stat"><div class="n draw">≈1/1.2"</div><div class="l">靶面 · 几乎相同</div></div>
+    <div class="stat"><div class="n win">0.7 e⁻</div><div class="l">IMX585 实测读噪</div></div>
+    <div class="stat"><div class="n win">91%</div><div class="l">IMX585 mono 实测 QE</div></div>
+  </div>
+</header>
+
+<!-- ================= evidence toggle ================= -->
+<div class="evidence-bar">
+  <div class="lbl"><b>证据分级：</b>每个数字都标注来源。琥珀色 = 推断参数（无官方数据，按同系列外推）。试着关掉它——OS08B10 的性能画像会随之塌缩，只剩接口规格。</div>
+  <label class="switch"><input type="checkbox" id="infToggle" checked><span class="track"></span>显示推断参数</label>
+  <div class="badges">
+    <span class="badge official">官方</span>
+    <span class="badge measured">实测</span>
+    <span class="badge inferred">推断</span>
+  </div>
+</div>
+
+<!-- ================= verdict ================= -->
+<section>
+  <div class="verdict-banner">
+    <div class="win-name">IMX585 胜</div>
+    <div class="why"><b>纸面平手，实战碾压。</b>所有可对比硬指标上，OS08B10 推断区间中位值仍弱于 IMX585 实测值；且 IMX585 已有制冷黑白成品、驱动生态与第三方实测曲线。OS08B10 是理论上可能有潜力、但无法验证也无人实装的未知数。</div>
+    <div class="score"><div class="s">4.5 <small>vs 2.5</small></div><div class="l" style="font-size:10.5px;color:var(--text-3);letter-spacing:.6px;">DEEP-SKY SCORE / 5</div></div>
+  </div>
+  <div class="verdict">
+    <div class="pillar">
+      <h3>① 可验证性碾压</h3>
+      <p>IMX585：<span class="k">0.7 e⁻ 读噪 · 54 ke⁻ 满阱 · O III 91.2% QE · 零 amp glow</span>，全部来自相机厂实测。OS08B10：读噪/满阱/QE 曲线/暗电流——四项全未知。</p>
+    </div>
+    <div class="pillar">
+      <h3>② 生态碾压</h3>
+      <p>IMX585：ZWO / Player One / QHY 制冷与非制冷成品、ASCOM/INDI 驱动、Seestar S30 Pro 已在用户手中出片。OS08B10：<span class="k">零天文实现</span>，连入场路径都没有。</p>
+    </div>
+    <div class="pillar">
+      <h3>③ 黑白版刚需</h3>
+      <p>窄带深空（Hα/O III/S II）需要 mono。IMX585 有官方黑白版 AAMJ1 与黑白天文相机；OS08B10 <span class="k">仅有彩色</span>——先天出局窄带主力赛道。</p>
+    </div>
+    <div class="pillar lose">
+      <h3>OS08B10 的理论牌</h3>
+      <p>Nyxel NIR 增强、三曝光交错 HDR &gt;120 dB、片上 DCG 合成 + PWL。均为<span class="k">架构声明</span>：Nyxel 声明波段在 850/940 nm，不在 Hα 656 / O III 501 nm 窄带内。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= radar + bars ================= -->
+<section>
+  <div class="sec-head"><h2>性能画像</h2><span class="tag">Radar</span><span class="note">OS08B10 多边形由推断中位值构成 · 满分 5</span></div>
+  <div class="charts-grid">
+    <div class="card radar-wrap">
+      <svg viewBox="0 0 460 440" role="img" aria-label="六维雷达图：IMX585 实测 vs OS08B10 推断">
+        <!-- rings -->
+        <g fill="none" stroke="#26262c" stroke-width="1">
+          <polygon points="230,175 264.7,195 264.7,245 230,245 195.3,245 195.3,195"/>
+          <polygon points="230,140 299.4,180.2 299.4,260.5 230,280 160.6,260.5 160.6,180.2"/>
+          <polygon points="230,105 334.1,165.3 334.1,275.7 230,315 125.9,275.7 125.9,165.3"/>
+          <polygon points="230,70 368.8,150.3 368.8,290.9 230,350 91.2,290.9 91.2,150.3"/>
+        </g>
+        <!-- axes -->
+        <g stroke="#26262c" stroke-width="1">
+          <line x1="230" y1="210" x2="230" y2="70"/>
+          <line x1="230" y1="210" x2="351.2" y2="140"/>
+          <line x1="230" y1="210" x2="351.2" y2="280"/>
+          <line x1="230" y1="210" x2="230" y2="350"/>
+          <line x1="230" y1="210" x2="108.8" y2="280"/>
+          <line x1="230" y1="210" x2="108.8" y2="140"/>
+        </g>
+        <!-- OS08B10 inferred polygon -->
+        <g class="radar-ovt">
+          <polygon points="230,140 278.5,182 296.7,248.5 230,315 226.4,212.1 193.6,189"
+            fill="rgba(217,136,46,.16)" stroke="#d9882e" stroke-width="1.8" stroke-dasharray="5 4"/>
+          <g fill="#d9882e">
+            <circle cx="230" cy="140" r="3.5"/><circle cx="278.5" cy="182" r="3.5"/>
+            <circle cx="296.7" cy="248.5" r="3.5"/><circle cx="230" cy="315" r="3.5"/>
+            <circle cx="226.4" cy="212.1" r="3.5"/><circle cx="193.6" cy="189" r="3.5"/>
+          </g>
+        </g>
+        <!-- IMX585 polygon -->
+        <polygon points="230,77 333.2,150.5 339.1,273 230,322 114.8,276.5 133,154"
+          fill="rgba(134,176,126,.20)" stroke="#86b07e" stroke-width="2.2"/>
+        <g fill="#86b07e">
+          <circle cx="230" cy="77" r="4"/><circle cx="333.2" cy="150.5" r="4"/>
+          <circle cx="339.1" cy="273" r="4"/><circle cx="230" cy="322" r="4"/>
+          <circle cx="114.8" cy="276.5" r="4"/><circle cx="133" cy="154" r="4"/>
+        </g>
+        <!-- axis labels -->
+        <g font-family="Geist Mono,monospace" font-size="11" fill="#9e9890" text-anchor="middle">
+          <text x="230" y="52">读出噪声</text>
+          <text x="397" y="132">满阱容量</text>
+          <text x="397" y="300">量子效率</text>
+          <text x="230" y="374">动态范围</text>
+          <text x="63" y="300">天文生态</text>
+          <text x="63" y="132">数据透明度</text>
+        </g>
+        <g font-family="Geist Mono,monospace" font-size="9.5" text-anchor="middle">
+          <text x="230" y="66" fill="#86b07e">0.7 e⁻ · 实测</text>
+          <text x="352" y="168" fill="#86b07e">54 ke⁻ · 实测</text>
+          <text x="352" y="286" fill="#86b07e">91% · 实测</text>
+          <text x="230" y="390" fill="#9e9890">88–93 dB · 官方+实测</text>
+          <text x="98" y="318" fill="#86b07e">4+ 相机 · 驱动</text>
+          <text x="98" y="150" fill="#9e9890">官方+三方</text>
+        </g>
+        <!-- series labels -->
+        <g font-family="Geist Mono,monospace" font-size="11.5" font-weight="600">
+          <text x="242" y="96" fill="#86b07e">IMX585（实测）</text>
+          <text x="120" y="210" fill="#d9882e" class="inferred">OS08B10（推断）</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="card">
+      <h3>硬指标对比</h3>
+      <p class="cap">条形按最大值绘制；琥珀色范围条 = 推断区间（min–max）</p>
+
+      <div class="bgroup">
+        <div class="bh"><span class="t">读出噪声（越低越好）</span><span class="u">e⁻ · HCG/高增益</span></div>
+        <div class="brow">
+          <div class="bl">IMX585 <small>ZWO ASI585 / Player One</small></div>
+          <div class="track"><div class="fill" style="width:11.7%"></div><span class="val">0.7</span></div>
+        </div>
+        <div class="brow">
+          <div class="bl">IMX585 <small>QHY miniCAM8 · 线性 HDR</small></div>
+          <div class="track"><div class="fill" style="width:16.7%"></div><span class="val">0.76–1.0</span></div>
+        </div>
+        <div class="brow inferred-row">
+          <div class="bl">OS08B10 <small>HCG · 推断</small></div>
+          <div class="track"><div class="fill ovt range" style="left:25%;width:33.3%"></div><span class="val" style="left:60%">1.5–3.5</span></div>
+        </div>
+        <div class="brow inferred-row">
+          <div class="bl">OS08B10 <small>LCG · 推断</small></div>
+          <div class="track"><div class="fill ovt range" style="left:50%;width:50%"></div><span class="val" style="left:6%">3–6</span></div>
+        </div>
+        <p class="bnote">差距 2–5×。0.7 e⁻ 意味着短曝堆栈几乎不损失 SNR；1.5 e⁻ 起步则每帧底噪翻倍以上。</p>
+      </div>
+
+      <div class="bgroup">
+        <div class="bh"><span class="t">满阱容量（越高越好）</span><span class="u">ke⁻</span></div>
+        <div class="brow">
+          <div class="bl">IMX585 <small>QHY miniCAM8</small></div>
+          <div class="track"><div class="fill" style="width:90%"></div><span class="val">54</span></div>
+        </div>
+        <div class="brow">
+          <div class="bl">IMX585 <small>Player One Uranus-M</small></div>
+          <div class="track"><div class="fill" style="width:78.3%"></div><span class="val">47</span></div>
+        </div>
+        <div class="brow">
+          <div class="bl">IMX585 <small>ZWO ASI585MC</small></div>
+          <div class="track"><div class="fill" style="width:66.7%"></div><span class="val">40</span></div>
+        </div>
+        <div class="brow inferred-row">
+          <div class="bl">OS08B10 <small>推断</small></div>
+          <div class="track"><div class="fill ovt range" style="left:20%;width:15%"></div><span class="val" style="left:37%">12–21</span></div>
+        </div>
+        <p class="bnote">最弱一环：仅 IMX585 的 1/2–1/4。亮星与星系核心提前饱和溢出，长曝堆栈动态范围受限。</p>
+      </div>
+
+      <div class="bgroup">
+        <div class="bh"><span class="t">量子效率（越高越好）</span><span class="u">% · mono</span></div>
+        <div class="brow">
+          <div class="bl">IMX585 mono <small>峰值 · QHY 实测</small></div>
+          <div class="track"><div class="fill" style="width:91%"></div><span class="val">91–92</span></div>
+        </div>
+        <div class="brow">
+          <div class="bl">IMX585 mono <small>Hα 656nm · QHY 实测</small></div>
+          <div class="track"><div class="fill" style="width:80.9%"></div><span class="val">80.9</span></div>
+        </div>
+        <div class="brow">
+          <div class="bl">IMX585 mono <small>O III 501nm · QHY 实测</small></div>
+          <div class="track"><div class="fill" style="width:91.2%"></div><span class="val">91.2</span></div>
+        </div>
+        <div class="brow inferred-row">
+          <div class="bl">OS08B10 <small>峰值 · 推断</small></div>
+          <div class="track"><div class="fill ovt range" style="left:60%;width:15%"></div><span class="val" style="left:77%">60–75</span></div>
+        </div>
+        <div class="brow inferred-row">
+          <div class="bl">OS08B10 <small>Hα · 彩色版推断</small></div>
+          <div class="track"><div class="fill ovt range" style="left:50%;width:15%"></div><span class="val" style="left:67%">50–65</span></div>
+        </div>
+        <p class="bnote">窄带 QE 是深空命门——IMX585 的窄带曲线可查证，OS08B10 连完整 QE 曲线都不存在。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= spec table ================= -->
+<section>
+  <div class="sec-head"><h2>规格总表</h2><span class="tag">Specifications</span><span class="note">点击右上开关可隐藏所有推断行</span></div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="grp-ovt" colspan="2">OmniVision</th>
+          <th class="grp-sony" colspan="2">Sony</th>
+        </tr>
+        <tr>
+          <th>参数</th>
+          <th class="model ovt">OS08B10<small>安防 · PureCel Plus-S</small></th>
+          <th class="model ovt" style="border-top-color:transparent"></th>
+          <th class="model sony">IMX585<small>安防 · STARVIS 2</small></th>
+          <th class="model sony" style="border-top-color:transparent"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>有效像素</th>
+          <td class="win" colspan="2">3840×2160 · 8.3MP <span class="badge official">官方</span></td>
+          <td class="win" colspan="2">3856×2180 · 8.4MP <span class="badge official">官方</span></td>
+        </tr>
+        <tr>
+          <th>像元尺寸</th>
+          <td colspan="2">2.9 µm <span class="badge official">官方</span></td>
+          <td colspan="2">2.9 µm <span class="badge official">官方</span></td>
+        </tr>
+        <tr>
+          <th>光学格式</th>
+          <td colspan="2">1/1.25"（对角约 12.8mm）<span class="badge official">官方</span></td>
+          <td colspan="2">1/1.2 型（对角 12.84mm）<span class="badge official">官方</span></td>
+        </tr>
+        <tr>
+          <th>快门 / CFA</th>
+          <td colspan="2">卷帘 · 彩色 Bayer<span class="badge official">官方</span></td>
+          <td colspan="2">卷帘 · 彩色 Bayer + <b style="color:var(--sony)">官方黑白版 AAMJ1</b><span class="badge official">官方</span></td>
+        </tr>
+        <tr>
+          <th>ADC / 输出</th>
+          <td colspan="2">10/12-bit RAW；16/14-bit 合成 RAW（DCG 片上）；PWL 压缩<span class="badge official">官方</span></td>
+          <td colspan="2">10/12-bit ADC；RAW10/RAW12；RAW16（Clear HDR）<span class="badge official">官方</span></td>
+        </tr>
+        <tr>
+          <th>4K 读出速率</th>
+          <td colspan="2">30 fps @12-bit（30×3 HDR）<span class="badge official">官方</span></td>
+          <td class="win" colspan="2">60 fps @12-bit · 90 fps @10-bit<span class="badge official">官方</span></td>
+        </tr>
+        <tr>
+          <th>单曝光动态范围</th>
+          <td colspan="2">90 dB（DCG + 极短曝光）<span class="badge official">官方</span></td>
+          <td colspan="2">88 dB 官方 · 93 dB QHY 线性 HDR 实测<span class="badge official">官方</span><span class="badge measured">实测</span></td>
+        </tr>
+        <tr>
+          <th>多曝光 HDR</th>
+          <td colspan="2">3 曝光交错 &gt;120 dB，片外合成<span class="badge official">官方</span></td>
+          <td colspan="2">DOL + Clear HDR；多曝光 106 dB<span class="badge official">官方</span></td>
+        </tr>
+        <tr>
+          <th>双增益读出</th>
+          <td colspan="2">DCG<span class="badge official">官方</span></td>
+          <td colspan="2">Clear HDR（HCG/LCG）——<b style="color:var(--text)">非 OS08B10 独有</b><span class="badge official">官方</span></td>
+        </tr>
+        <tr>
+          <th>近红外</th>
+          <td colspan="2">Nyxel：850/940nm QE 增强，无曲线<span class="badge official">官方定性</span></td>
+          <td colspan="2">850nm 灵敏度 ≈1.7× IMX485<span class="badge official">官方</span></td>
+        </tr>
+        <tr class="inferred-row">
+          <th>读出噪声</th>
+          <td colspan="2">1.5–3.5 e⁻（HCG）· 3–6 e⁻（LCG）<span class="badge inferred">推断</span></td>
+          <td class="win" colspan="2">0.7–0.76 e⁻（ZWO / Player One / QHY）<span class="badge measured">实测</span></td>
+        </tr>
+        <tr class="inferred-row">
+          <th>满阱容量</th>
+          <td colspan="2">12–21 ke⁻<span class="badge inferred">推断</span></td>
+          <td class="win" colspan="2">40–54 ke⁻（三家相机实测）<span class="badge measured">实测</span></td>
+        </tr>
+        <tr class="inferred-row">
+          <th>QE 峰值 / Hα</th>
+          <td colspan="2">60–75% / 50–65%（彩色）<span class="badge inferred">推断</span></td>
+          <td class="win" colspan="2">91% / 80.9%（mono，QHY 曲线）<span class="badge measured">实测</span></td>
+        </tr>
+        <tr class="inferred-row">
+          <th>暗电流</th>
+          <td colspan="2">0.1–0.5 e⁻/s/px @25°C<span class="badge inferred">推断</span></td>
+          <td colspan="2">未公开；300s 暗场零 amp glow（Player One 实拍）<span class="badge measured">实测</span></td>
+        </tr>
+        <tr>
+          <th>天文相机生态</th>
+          <td colspan="2">无<span class="badge official">现状</span></td>
+          <td class="win" colspan="2">ASI585MC/MM · Uranus-M/C · miniCAM8 · Seestar S30 Pro<span class="badge measured">实测</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= QE curve ================= -->
+<section>
+  <div class="sec-head"><h2>QE 光谱曲线：窄带才是战场</h2><span class="tag">Quantum Efficiency</span><span class="note">竖线 = 深空发射线</span></div>
+  <div class="card qe-card">
+    <svg viewBox="0 0 900 430" role="img" aria-label="QE 光谱对比：IMX585 mono 实测曲线 vs OS08B10 推断区间，标注 Hβ/OIII/Hα/SII 发射线位置">
+      <!-- NIR claim zone -->
+      <rect x="660" y="30" width="120" height="320" fill="rgba(217,136,46,.06)" stroke="rgba(217,136,46,.25)" stroke-dasharray="4 4"/>
+      <text x="720" y="368" font-family="Geist Mono,monospace" font-size="10.5" fill="#d9882e" text-anchor="middle">Nyxel 声明区 · 无曲线</text>
+
+      <!-- grid -->
+      <g stroke="#222228" stroke-width="1">
+        <line x1="60" y1="30" x2="860" y2="30"/>
+        <line x1="60" y1="110" x2="860" y2="110"/>
+        <line x1="60" y1="190" x2="860" y2="190"/>
+        <line x1="60" y1="270" x2="860" y2="270"/>
+        <line x1="60" y1="350" x2="860" y2="350"/>
+        <line x1="60" y1="30" x2="60" y2="350"/>
+        <line x1="193.3" y1="30" x2="193.3" y2="350"/>
+        <line x1="326.7" y1="30" x2="326.7" y2="350"/>
+        <line x1="460" y1="30" x2="460" y2="350"/>
+        <line x1="593.3" y1="30" x2="593.3" y2="350"/>
+        <line x1="726.7" y1="30" x2="726.7" y2="350"/>
+        <line x1="860" y1="30" x2="860" y2="350"/>
+      </g>
+      <!-- y labels -->
+      <g font-family="Geist Mono,monospace" font-size="10.5" fill="#8d8780" text-anchor="end">
+        <text x="52" y="34">100</text><text x="52" y="114">75</text><text x="52" y="194">50</text>
+        <text x="52" y="274">25</text><text x="52" y="354">0</text>
+        <text x="30" y="200" transform="rotate(-90 30 200)" text-anchor="middle" fill="#9e9890">QE (%)</text>
+      </g>
+      <!-- x labels -->
+      <g font-family="Geist Mono,monospace" font-size="10.5" fill="#8d8780" text-anchor="middle">
+        <text x="60" y="372">400</text><text x="193.3" y="372">500</text><text x="326.7" y="372">600</text>
+        <text x="460" y="372">700</text><text x="593.3" y="372">800</text><text x="726.7" y="372">900</text>
+        <text x="860" y="372">1000</text>
+        <text x="460" y="392" fill="#9e9890">波长 (nm)</text>
+      </g>
+
+      <!-- OS08B10 inferred band -->
+      <g class="band-ovt">
+        <polygon points="60,222 126.7,110 260,110 326.7,132 401.7,142 460,158 460,206 401.7,190 326.7,184 260,174 126.7,174"
+          fill="rgba(217,136,46,.13)" stroke="#d9882e" stroke-width="1.4" stroke-dasharray="6 4"/>
+        <text x="262" y="140" font-family="Geist Mono,monospace" font-size="11" fill="#d9882e">OS08B10 推断区间（无官方曲线）</text>
+      </g>
+
+      <!-- IMX585 mono measured -->
+      <path d="M60,318 L126.7,110 L194.3,58.2 L260,62 L326.7,94 L401.7,90.8 L423.2,97.8"
+        fill="none" stroke="#86b07e" stroke-width="2.6"/>
+      <path d="M423.2,97.8 L700,221.7 L860,302"
+        fill="none" stroke="#86b07e" stroke-width="1.8" stroke-dasharray="5 5" opacity=".65"/>
+      <g fill="#86b07e" stroke="#0e0e10" stroke-width="1.5">
+        <circle cx="60" cy="318" r="4"/><circle cx="126.7" cy="110" r="4"/>
+        <circle cx="194.3" cy="58.2" r="5"/><circle cx="260" cy="62" r="4"/>
+        <circle cx="326.7" cy="94" r="4"/><circle cx="401.7" cy="90.8" r="5"/>
+        <circle cx="423.2" cy="97.8" r="4"/><circle cx="700" cy="221.7" r="4"/>
+      </g>
+      <text x="216" y="46" font-family="Geist Mono,monospace" font-size="11.5" fill="#86b07e" font-weight="600">IMX585 mono 实测（QHY miniCAM8M）</text>
+      <text x="712" y="212" font-family="Geist Mono,monospace" font-size="9.5" fill="#9e9890" opacity=".85">CH₄ 40.1%</text>
+
+      <!-- emission lines -->
+      <g stroke="#e64a40" stroke-width="1.2" stroke-dasharray="3 3" opacity=".75">
+        <line x1="181.5" y1="30" x2="181.5" y2="350"/>
+        <line x1="194.3" y1="30" x2="194.3" y2="350"/>
+        <line x1="401.7" y1="30" x2="401.7" y2="350"/>
+        <line x1="423.2" y1="30" x2="423.2" y2="350"/>
+      </g>
+      <g font-family="Geist Mono,monospace" font-size="10" fill="#e64a40" text-anchor="middle">
+        <text x="181.5" y="22">Hβ 486</text>
+        <text x="194.3" y="404" transform="rotate(0)">O III 501 · 91.2%</text>
+        <text x="401.7" y="22">Hα 656 · 80.9%</text>
+        <text x="423.2" y="404">S II 672</text>
+      </g>
+    </svg>
+    <div class="legend">
+      <div class="li"><span class="sw" style="border-color:#86b07e"></span>IMX585 mono 实测（QHY，Sony 官方曲线）</div>
+      <div class="li"><span class="sw dash" style="border-color:#86b07e"></span>内插段（厂商未发布逐点数据）</div>
+      <div class="li"><span class="sw band"></span>OS08B10 推断区间</div>
+      <div class="li"><span class="sw dash" style="border-color:#e64a40"></span>深空发射线</div>
+    </div>
+    <p class="bnote" style="margin-top:12px">IMX585 彩色版 QE：R 82% / G 87% / B 75%（QHY）。Nyxel 的 NIR 声明（850/940nm）落在窄带发射线之外——对 Hα/O III 拍摄不构成任何已证实优势。</p>
+  </div>
+</section>
+
+<!-- ================= deep-sky perspective ================= -->
+<section>
+  <div class="sec-head"><h2>深空视角：三个容易被带偏的点</h2><span class="tag">Deep-Sky Lens</span></div>
+  <div class="ds-grid">
+    <div class="ds">
+      <h3><span class="ic">⏱</span>HDR 要分两类看</h3>
+      <p><b>时间域多曝光</b>（DOL / 三曝光交错）：帧间时间差对旋转天体是灾难，深空堆栈完全用不上——那是安防与 EAA 实时预览的工具。<b>双增益单曝光</b>（Clear HDR / 线性 HDR / DCG）：一次曝光同时拿低读噪与高满阱，QHY 实测 93 dB、1.0 e⁻，对 DSO 有真实价值。OS08B10 引以为傲的 &gt;120 dB 属于前者。</p>
+    </div>
+    <div class="ds">
+      <h3><span class="ic">🔴</span>Nyxel ≠ 窄带增强</h3>
+      <p>Nyxel 声明的增强波段在 <span class="mono">850/940 nm</span>，而深空窄带主线是 <span class="mono">Hα 656.3 / O III 500.7 / S II 672.4 nm</span>——完全不重叠。把"NIR 增强"读成"发射星云更敏感"是营销话术最常见的偷换。IMX585 的窄带 QE 有曲线可查，OS08B10 在这些波长上只有未知。</p>
+    </div>
+    <div class="ds">
+      <h3><span class="ic">❓</span>唯一可能翻盘的盲区</h3>
+      <p><b>暗电流与 amp glow 是 OS08B10 唯一未被证据否定的方向</b>：推断 0.1–0.5 e⁻/s/px @25°C 属现代 CMOS 正常水平，若制冷后同样干净，长曝底噪未必输。但这需要一台制冷相机 + 900s 暗场实测——而目前没有任何厂商做过这台相机。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ecosystem ================= -->
+<section>
+  <div class="sec-head"><h2>生态现状：一边是货架，一边是空白</h2><span class="tag">Ecosystem</span></div>
+  <div class="eco-grid">
+    <div class="eco">
+      <p class="en">QHY miniCAM8</p>
+      <p class="et">mono / color · TEC −45°C</p>
+      <ul>
+        <li>双级制冷 · 900s 长曝</li>
+        <li>内置 8 孔滤镜轮（LRGB+SHO）</li>
+        <li><b>0.76 e⁻ · 54 ke⁻</b> · 线性 HDR 93 dB</li>
+      </ul>
+    </div>
+    <div class="eco">
+      <p class="en">Player One Uranus-M/C</p>
+      <p class="et">mono / color · 行星+EAA</p>
+      <ul>
+        <li>HCG 增益 180 起切换</li>
+        <li>300s 暗场<b>零 amp glow</b></li>
+        <li><b>0.7 e⁻ · 47 ke⁻</b> · QE ≈91%</li>
+      </ul>
+    </div>
+    <div class="eco">
+      <p class="en">ZWO ASI585MC/MM</p>
+      <p class="et">color / mono · 非制冷</p>
+      <ul>
+        <li>最长曝光 33.3min · PCS 被动散热</li>
+        <li>ASCOM / INDI / ASIAIR 全链路</li>
+        <li><b>0.7 e⁻ · 40 ke⁻</b> · QE 91%</li>
+      </ul>
+    </div>
+    <div class="eco">
+      <p class="en">ZWO Seestar S30 Pro</p>
+      <p class="et">一体式智能望远镜</p>
+      <ul>
+        <li>IMX585 OSC + 双窄带滤镜</li>
+        <li>已在用户手中量产出片</li>
+        <li>本页读者自己的拍摄平台</li>
+      </ul>
+    </div>
+    <div class="eco-empty">
+      <div class="big">OS08B10 · 空</div>
+      <div class="sm">无天文相机实现 · 无 ASCOM/INDI 驱动 · 无第三方实测。<br>即使电性能达标，目前也没有进入深空实践的路径。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= footer ================= -->
+<footer>
+  <p class="src">
+    数据来源：
+    <a href="https://www.ovt.com/wp-content/uploads/2024/07/OS08B10-PB-v1.0-WEB.pdf">OmniVision OS08B10 Product Brief</a> ·
+    <a href="https://www.sony-semicon.com/files/62/flyer_security/IMX585-AAMJ1_Flyer.pdf">Sony IMX585-AAMJ1 Flyer</a> ·
+    Sony 2021-06 发布稿（88/106 dB · NIR 1.7×） ·
+    <a href="https://www.zwoastro.com/product/asi585mc-mm/">ZWO ASI585MC/MM</a> ·
+    <a href="https://player-one-astronomy.cn/?p=2878">Player One Uranus-M</a> ·
+    <a href="https://www.qhyccd.cn/?p=3521">QHY miniCAM8</a> ·
+    OS08B10 电性能推断参数：用户提供（同系列外推）
+  </p>
+  <div class="disc"><b>推断声明：</b>琥珀色标注的读噪、满阱、QE、暗电流为 OS08B10 推断区间，非官方数据，仅用于"若达标也仍落后"的量级论证。结论对推断区间上下沿均成立；唯一例外是暗电流——见"盲区"卡片。</div>
+</footer>
+
+</div>
+<script>
+(function(){
+  var t=document.getElementById('infToggle');
+  t.addEventListener('change',function(){document.body.classList.toggle('hide-inferred',!t.checked);});
+})();
+</script>
+</body>
+</html>

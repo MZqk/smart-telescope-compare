@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="Fpr88liJH7ccVLHGmferSJ">
+<head data-page-node-id="0fkz1TlinzxM9fYx6VW3GZ">
+<meta charset="UTF-8" data-page-node-id="LHa040TC8fZ931B4SzaKrX">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="gVqIi3wjSGLTT8pnlijUBH">
+<title>智能望远镜参数规格对比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="mUL9TWsbtj4rahQhFDfO63">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="C6CBVWMv0rINNWXwUdvmFC">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" data-page-node-id="GtJhGKrYxxp5S1CPUwnmuD">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" data-page-node-id="pvDqcnGN2LD0tMAyAqPUYG">
+<style>
+:root{
+  --bg:#08080a; --surface:#0e0e10; --card:#141416; --muted-bg:#1a1a1e;
+  --border:#2a2a30;
+  --text:#e8e4dd; --text-2:#9e9890; --text-3:#8d8780;
+  --accent:#e64a40; --accent-hover:#c02a22; --accent-soft:rgba(230,74,64,.12);
+  --green:#86b07e; --amber:#d9882e; --purple:#9b8ec4;
+  --dwarf:#e64a40; --dwarf-soft:rgba(230,74,64,.12);
+  --zwo:#d9882e;   --zwo-soft:rgba(217,136,46,.12);
+  --diff:#86b07e;  --diff-bg:rgba(134,176,126,.10);
+  --shadow:0 26px 64px -28px rgba(0,0,0,.85);
+  --r:16px;
+  --font-ui:"Geist","Inter",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:"Geist Mono","JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; min-height:100vh; color:var(--text);
+  font-family:var(--font-ui); font-size:14px; line-height:1.6;
+  background:
+    radial-gradient(1100px 720px at 6% -10%, rgba(230,74,64,.15), transparent 55%),
+    radial-gradient(1000px 800px at 106% 2%, rgba(217,136,46,.13), transparent 55%),
+    radial-gradient(940px 940px at 50% 120%, rgba(155,142,196,.13), transparent 60%),
+    radial-gradient(820px 720px at 88% 92%, rgba(134,176,126,.07), transparent 55%),
+    linear-gradient(180deg,#0c0c0f,#08080a);
+  background-attachment:fixed;
+  padding:42px 22px 96px;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+.bg-stars{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.22;
+  background-image:
+    radial-gradient(1.3px 1.3px at 18% 28%, rgba(232,228,221,.7), transparent),
+    radial-gradient(1.1px 1.1px at 72% 18%, rgba(232,228,221,.5), transparent),
+    radial-gradient(1.5px 1.5px at 42% 68%, rgba(232,228,221,.6), transparent),
+    radial-gradient(1px 1px at 86% 58%, rgba(232,228,221,.45), transparent),
+    radial-gradient(1.3px 1.3px at 56% 44%, rgba(232,228,221,.5), transparent),
+    radial-gradient(1px 1px at 8% 82%, rgba(232,228,221,.4), transparent),
+    radial-gradient(1.4px 1.4px at 92% 92%, rgba(232,228,221,.55), transparent);
+  background-repeat:repeat; background-size:560px 560px;}
+.wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;}
+
+/* ---------- header ---------- */
+header{position:relative;margin-bottom:26px;padding-right:160px;}
+.back-starun{position:absolute;top:0;right:0;display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:12.5px;font-weight:500;letter-spacing:.3px;
+  color:var(--dwarf);text-decoration:none;white-space:nowrap;
+  background:rgba(230,74,64,.10);border:1px solid var(--dwarf);
+  padding:9px 16px;border-radius:999px;
+  transition:background .18s,color .18s,transform .18s,box-shadow .18s;}
+.back-starun svg{width:15px;height:15px;flex:none;}
+.back-starun:hover{background:var(--dwarf);color:#fff;transform:translateY(-1px);
+  box-shadow:0 6px 18px rgba(230,74,64,.35);}
+.back-starun:focus-visible{outline:2px solid var(--dwarf);outline-offset:3px;}
+.brand-badge{display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--text-2);border:1px solid var(--border);background:var(--card);
+  padding:6px 13px;border-radius:999px;margin-bottom:16px;}
+.brand-badge b{color:var(--dwarf);font-weight:600;} .brand-badge i{color:var(--zwo);font-style:normal;font-weight:600;}
+header h1{font-family:var(--font-ui);font-size:clamp(26px,4.2vw,40px);font-weight:700;
+  margin:0 0 9px;letter-spacing:.2px;line-height:1.14;
+  background:linear-gradient(92deg,#ffffff 8%, #f3b0aa 48%, #ecc18a 92%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+header .sub{color:var(--text-2);font-size:13.5px;margin:0 0 20px;max-width:780px;}
+.stats{display:flex;flex-wrap:wrap;gap:12px;}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:13px 17px;min-width:118px;transition:transform .2s,border-color .2s,box-shadow .2s;
+  background-image:linear-gradient(135deg, rgba(230,74,64,.06), transparent 45%);}
+.stat:hover{transform:translateY(-2px);border-color:#3a3a42;box-shadow:var(--shadow);}
+.stat .n{font-family:var(--font-mono);font-size:23px;font-weight:600;line-height:1;color:var(--accent);}
+.stat .l{font-size:11.5px;color:var(--text-2);margin-top:6px;letter-spacing:.4px;}
+
+/* ---------- toolbar ---------- */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px 14px;margin-bottom:18px;box-shadow:var(--shadow);
+  background-image:linear-gradient(135deg, rgba(230,74,64,.05), transparent 42%);}
+.search{position:relative;flex:1 1 280px;min-width:240px;}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-3);}
+.search input{width:100%;background:#0a0a0c;border:1px solid var(--border);color:var(--text);
+  padding:11px 14px 11px 38px;border-radius:12px;font-size:14px;outline:none;font-family:var(--font-ui);
+  transition:border-color .2s, box-shadow .2s, background .2s;}
+.search input::placeholder{color:var(--text-3);}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:#0c0c0e;}
+.switch{display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
+  font-size:13px;color:var(--text-2);padding:8px 13px;border:1px solid var(--border);border-radius:999px;
+  background:#0a0a0c;transition:color .2s,border-color .2s;}
+.switch:hover{color:var(--text);border-color:#3a3a42;}
+.switch input{position:absolute;opacity:0;width:0;height:0;}
+.switch .track{width:34px;height:19px;border-radius:999px;background:var(--muted-bg);
+  position:relative;transition:.25s;flex:none;}
+.switch .track::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;
+  background:#cfc9c0;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.5);}
+.switch input:checked + .track{background:var(--accent);}
+.switch input:checked + .track::after{transform:translateX(15px);background:#fff;}
+.switch input:focus-visible + .track{box-shadow:0 0 0 3px var(--accent-soft);}
+.count{margin-left:auto;color:var(--text-2);font-size:13px;white-space:nowrap;
+  font-family:var(--font-mono);letter-spacing:.3px;}
+.count b{color:var(--text);}
+
+/* ---------- product filter ---------- */
+.product-filter{display:flex;align-items:center;flex-wrap:wrap;gap:12px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px 14px;margin-bottom:16px;box-shadow:var(--shadow);
+  background-image:linear-gradient(135deg, rgba(217,136,46,.05), transparent 42%);}
+.pf-label{font-size:12.5px;color:var(--text-2);font-family:var(--font-mono);letter-spacing:.4px;flex:none;}
+.pf-chips{display:flex;flex-wrap:wrap;gap:10px;}
+.pf-chip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
+  font-family:var(--font-ui);font-size:13px;font-weight:500;color:var(--text);
+  background:#0a0a0c;border:1px solid var(--border);border-radius:999px;
+  padding:7px 14px;transition:color .18s,border-color .18s,background .18s,opacity .18s,transform .15s;}
+.pf-chip:hover{transform:translateY(-1px);border-color:#3a3a42;}
+.pf-chip:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+.pf-chip .pf-dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--text-3);transition:background .18s;}
+.pf-chip.dwarf .pf-dot{background:var(--dwarf);}
+.pf-chip.zwo .pf-dot{background:var(--zwo);}
+.pf-chip.on.dwarf{border-color:var(--dwarf);background:var(--dwarf-soft);}
+.pf-chip.on.zwo{border-color:var(--zwo);background:var(--zwo-soft);}
+.pf-chip.off{opacity:.45;}
+.pf-chip.off .pf-dot{background:var(--text-3);}
+.pf-mobile-meta{display:none;}
+.pf-preset{border:0;background:transparent;color:var(--zwo);font:600 12px var(--font-ui);
+  padding:6px 8px;border-radius:8px;cursor:pointer;}
+.pf-preset:focus-visible{outline:2px solid var(--zwo);outline-offset:2px;}
+
+/* ---------- table ---------- */
+.table-scroll{overflow:auto;max-height:min(78vh,820px);border:1px solid var(--border);border-radius:var(--r);
+  background:var(--surface);box-shadow:var(--shadow);-webkit-overflow-scrolling:touch;}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:960px;font-size:13px;font-family:var(--font-mono);}
+th,td{padding:12px 15px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border);}
+thead th{position:sticky;top:0;z-index:3;background:rgba(14,14,16,.95);backdrop-filter:blur(6px);}
+thead .grp-dwarf,thead .grp-zwo{font-family:var(--font-mono);font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;
+  text-align:center;font-weight:600;padding:9px 12px;}
+thead .grp-dwarf{color:var(--dwarf);background:linear-gradient(180deg,var(--dwarf-soft),transparent);}
+thead .grp-zwo{color:var(--zwo);background:linear-gradient(180deg,var(--zwo-soft),transparent);}
+thead .model{font-family:var(--font-ui);font-size:14.5px;font-weight:600;padding:11px 15px;border-top:2px solid transparent;}
+thead .model.dwarf{color:var(--dwarf);border-top-color:var(--dwarf);}
+thead .model.zwo{color:var(--zwo);border-top-color:var(--zwo);}
+thead .model small{display:block;font-family:var(--font-mono);font-size:10px;color:var(--text-3);font-weight:500;letter-spacing:.4px;margin-top:3px;}
+thead th:first-child{z-index:4;background:rgba(14,14,16,.97);}
+tbody td:first-child,tbody th:first-child{position:sticky;left:0;z-index:2;
+  background:rgba(12,12,14,.97);font-weight:500;color:var(--text);min-width:190px;max-width:250px;
+  border-right:1px solid var(--border);backdrop-filter:blur(4px);font-family:var(--font-mono);}
+.param{color:var(--text-2);font-weight:500;}
+.brand-dwarf{color:var(--dwarf);}
+.brand-zwo{color:var(--zwo);}
+.section-row td{background:linear-gradient(90deg, rgba(230,74,64,.14), rgba(217,136,46,.08));
+  color:var(--text);font-family:var(--font-mono);font-weight:600;letter-spacing:1.2px;text-align:center;
+  font-size:12px;text-transform:uppercase;padding:11px;border-bottom:1px solid var(--border);}
+.section-row .ico{margin-right:8px;opacity:.85;}
+.na{color:var(--text-3);font-style:italic;}
+td.diff{background:var(--diff-bg);box-shadow:inset 3px 0 0 var(--diff);position:relative;}
+td.diff::after{content:"≠";position:absolute;top:7px;right:9px;font-size:11px;color:var(--diff);opacity:.8;}
+.val-good{color:var(--green);font-weight:600;}
+.val-bad{color:var(--text-3);}
+.price{font-family:var(--font-mono);font-weight:600;color:var(--text);font-size:13.5px;}
+.buys{margin-top:5px;display:flex;flex-wrap:wrap;gap:6px;}
+.buy{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:11px;
+  font-weight:600;padding:4px 9px;border-radius:999px;color:#fff;text-decoration:none;
+  transition:transform .15s,filter .15s;}
+.buy:hover{transform:translateY(-1px);filter:brightness(1.08);}
+.buy.taobao{background:var(--amber);}
+.buy.jd{background:var(--accent);}
+.buy svg{width:11px;height:11px;}
+tbody tr:hover td{background:rgba(230,74,64,.05);}
+tbody tr:hover td:first-child{background:rgba(16,16,18,.99);}
+tbody tr:hover td.diff{background:rgba(134,176,126,.16);}
+
+/* ---------- mobile cards ---------- */
+.cards-view{display:none;flex-direction:column;gap:12px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;
+  background-image:linear-gradient(135deg, rgba(230,74,64,.05), transparent 45%);}
+.card.diff{border-left:3px solid var(--diff);}
+.card h3{margin:0 0 10px;font-size:13.5px;font-weight:600;color:var(--text);font-family:var(--font-mono);}
+.card .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 0;border-top:1px solid var(--border);font-size:13px;font-family:var(--font-mono);}
+.card .row:first-of-type{border-top:none;}
+.card .row .m{color:var(--text-2);flex:none;font-family:var(--font-mono);}
+.card .row .m.dwarf{color:var(--dwarf);} .card .row .m.zwo{color:var(--zwo);}
+.card .row .v{text-align:right;color:var(--text);}
+.card.section-card{background:linear-gradient(90deg,rgba(230,74,64,.14),rgba(217,136,46,.08));border:none;}
+.card.section-card h3{margin:0;letter-spacing:1.2px;text-transform:uppercase;font-size:11.5px;}
+
+/* ---------- footer ---------- */
+footer{margin-top:28px;display:flex;flex-direction:column;gap:14px;}
+.legend{display:flex;gap:20px;flex-wrap:wrap;font-size:12.5px;color:var(--text-2);
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 17px;}
+.legend span{display:inline-flex;align-items:center;}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;}
+.note{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 19px;
+  color:var(--text-2);font-size:12.5px;line-height:1.78;}
+.note b{color:var(--text);}
+::-webkit-scrollbar{height:10px;width:10px;}
+::-webkit-scrollbar-thumb{background:rgba(232,228,221,.14);border-radius:999px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(232,228,221,.24);}
+
+@media (max-width:760px){
+  body{padding:18px 12px 64px;background-attachment:scroll;}
+  .table-scroll{display:none;}
+  .cards-view{display:flex;}
+  header{position:static;padding-right:0;margin-bottom:18px;}
+  .back-starun{position:static;display:inline-flex;margin-bottom:14px;padding:8px 13px;font-size:12px;}
+  header h1{font-size:clamp(25px,7.3vw,30px);margin-bottom:12px;letter-spacing:0;}
+  .stats{gap:8px;}
+  .stats .stat{flex:1 1 calc(50% - 4px);min-width:0;padding:11px 14px;border-radius:14px;}
+  .stat .n{font-size:22px;}
+  .stat .l{margin-top:5px;}
+
+  .toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px;
+    padding:10px;margin-bottom:12px;border-radius:14px;}
+  .search{grid-column:1/-1;min-width:0;}
+  .search input{font-size:13px;padding-top:10px;padding-bottom:10px;}
+  .switch{justify-content:center;min-width:0;padding:8px 9px;font-size:11.5px;line-height:1.35;
+    border-radius:12px;}
+  .switch .track{width:32px;height:18px;}
+  .switch .track::after{width:14px;height:14px;}
+  .switch input:checked + .track::after{transform:translateX(14px);}
+  .count{grid-column:1/-1;margin-left:0;width:100%;text-align:right;font-size:12px;padding:0 4px;}
+
+  .product-filter{position:sticky;top:8px;z-index:20;display:grid;
+    grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;margin:0 -2px 12px;
+    padding:9px 10px;border-radius:14px;background:rgba(14,14,16,.94);
+    box-shadow:0 14px 34px -18px rgba(0,0,0,.95);backdrop-filter:blur(14px);}
+  .pf-label{align-self:center;font-size:12px;}
+  .pf-mobile-meta{display:flex;align-items:center;justify-content:flex-end;gap:3px;
+    color:var(--text-3);font:500 11.5px var(--font-mono);white-space:nowrap;}
+  .pf-preset{min-height:36px;}
+  .pf-chips{grid-column:1/-1;display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;
+    padding:1px 2px 4px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;}
+  .pf-chips::-webkit-scrollbar{display:none;}
+  .pf-chip{flex:0 0 auto;min-height:40px;padding:7px 12px;font-size:12.5px;
+    scroll-snap-align:start;}
+
+  .cards-view{gap:10px;}
+  .card{padding:12px 14px;border-radius:14px;}
+  .card h3{margin-bottom:7px;font-size:13px;}
+  .card .row{display:grid;grid-template-columns:108px minmax(0,1fr);
+    align-items:start;gap:10px;padding:8px 0;font-size:12.5px;line-height:1.55;}
+  .card .row .m{font-size:11.5px;white-space:nowrap;letter-spacing:-.1px;}
+  .card .row .v{text-align:left;min-width:0;overflow-wrap:anywhere;word-break:break-word;}
+  .card .row .v .buys{justify-content:flex-start;}
+  .card.section-card{padding:11px 14px;}
+
+  footer{margin-top:20px;gap:10px;}
+  .legend{gap:10px;padding:12px 14px;font-size:11.5px;}
+  .legend span{width:100%;}
+  .note{padding:13px 15px;font-size:11.5px;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body data-page-node-id="dgmEqQHApszNOvUr7tp6r6">
+<div class="bg-stars" data-page-node-id="m7EnmgET1vFBDIhQo7oVsq"></div>
+<div class="wrap" data-page-node-id="dmeSbWs8u9ZjkqtqoDFDef">
+<header data-page-node-id="yZjp3wIt83Tit2NmukbEcR">
+  <a class="back-starun" href="https://starun.cloud/" rel="noopener noreferrer" title="返回 Starun 官网" data-page-node-id="DyiMBKiFJ24344lG63FAug">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="YxGVPGLrrqhJUoZAadVeso"><path d="M14 3h7v7" data-page-node-id="n4o6HZ04wEAocdDi4ruagY"/><path d="M21 3 10 14" data-page-node-id="KbewHLQN35aoxLdGFcj8b4"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5" data-page-node-id="DDcpubtepLB6YANiMXpW2t"/></svg>
+    返回 Starun
+  </a>
+  <h1 data-page-node-id="IK8llKPQzYgaRUDrhzpubV">智能望远镜参数规格对比</h1>
+  <div class="stats" data-page-node-id="z41iA7XPJaY2HUsy8iFFzW">
+    <div class="stat" data-page-node-id="HTts0QHBHFztbWJPLjl0iR"><div class="n" data-page-node-id="DIv0v1EcBsSd6VcoY4Fbiv">7</div><div class="l" data-page-node-id="Ern57bdUFEfg8kdhYV8iJi">对比机型</div></div>
+    <div class="stat" data-page-node-id="wwEr92qoWCbyyfqj4mbB11"><div class="n" data-page-node-id="5FP8MSOPhpoE2VaOoAxZlA">65</div><div class="l" data-page-node-id="1X7Mf6oLGHDEN33UmOxkqB">参数维度</div></div>
+    <div class="stat" data-page-node-id="T57ei5ChrtOXSEm9OqbzOd"><div class="n" data-page-node-id="slUt4PVO5AsrHARkPPybRI">2</div><div class="l" data-page-node-id="VBsaQNdJOWmhFAWV748Cnd">品牌阵营</div></div>
+    <div class="stat" data-page-node-id="yL1FNbAiLlGQXvpRXdbXFT"><div class="n" id="statDiff" data-page-node-id="Vwxn5PBoYsZrn1Gjwa6ERo">–</div><div class="l" data-page-node-id="jyGmqZZPG6wN5ZDUu65nAi">存在差异项</div></div>
+  </div>
+</header>
+<div class="toolbar" data-page-node-id="z3NuSo3JwhfTgucbq4XKPc">
+  <label class="search" data-page-node-id="9eEGWkr8d0GFpr9ftYWAtW">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" data-page-node-id="dCC0H53lKlQfJUMghlhOJg"><circle cx="11" cy="11" r="7" data-page-node-id="keRwcTGRdeAbJ5uuPjqC1a"/><path d="M21 21l-4.3-4.3" data-page-node-id="G5gEhcoxWflk2QRFEImc8Z"/></svg>
+    <input type="text" id="search" placeholder="搜索参数，如 传感器 / 电池 / 视场角…" data-page-node-id="IFDJKYIecqLX9IHwJrvrNj">
+  </label>
+  <label class="switch" data-page-node-id="cL0tghJ9APs9yiq4OGEUmm"><input type="checkbox" id="diffOnly" data-page-node-id="F8Y8G5RCEAfpAVHgUPqFMh"><span class="track" data-page-node-id="nRh2HBqsO1SAD7FgGXl5qh"></span>仅显示有差异的参数</label>
+  <label class="switch" data-page-node-id="zUwiWDDD2O9ij0CtTbFCHw"><input type="checkbox" id="hl" checked data-page-node-id="qdQsPOQFcdwwx8S9HgDdol"><span class="track" data-page-node-id="gyIMfNUcz2ZCnTYOLB7pkO"></span>高亮差异单元格</label>
+  <span class="count" id="count" data-page-node-id="TY99cGD3HFgHMp2UKEUI8C"></span>
+</div>
+<div class="product-filter" data-page-node-id="ecDxZi8MQ5S9GEDlUqT1bD">
+  <span class="pf-label" data-page-node-id="4qsikyYPNWkpK3IOA0dSUx">产品筛选</span>
+  <span class="pf-mobile-meta" data-page-node-id="8D3HBOPFmpMkmBlsQ4WIck"><span id="pfStatus" aria-live="polite" data-page-node-id="qEIBti9KAUDG6daHD1kWdH"></span><button class="pf-preset" id="mobilePreset" type="button" data-page-node-id="0Qr3iGKtO1D8kFWcHHUSMO">显示全部</button></span>
+  <div class="pf-chips" id="productFilter" data-page-node-id="XbR3sREkGJ098yx01L39E4"></div>
+</div>
+<div class="table-scroll" data-page-node-id="0gfp5TVtvck2AKDh2G0k6T">
+  <table data-page-node-id="4haUYH85z9Zb3xA5F0ybaS">
+    <thead id="head" data-page-node-id="8mVph2L8i3Lmgr3jlqEMo6"></thead>
+    <tbody id="body" data-page-node-id="MIwFildJHrtvJ75UA123Sc"></tbody>
+  </table>
+</div>
+<div class="cards-view" id="cardsView" data-page-node-id="FfW0DxV3u2d75YIdJft7ds"></div>
+<footer data-page-node-id="5r1q0EeEsK9xYajoIG6isD">
+  <div class="legend" data-page-node-id="BQ6sJAy0S1C6ZPBjTMl0Gw">
+    <span data-page-node-id="SB8rEQNP0hNTJ5aP8DOfMS"><i class="dot" style="background:var(--dwarf)" data-page-node-id="E4nkKiKNzgaS2Mol0mfJ1T"></i>DWARFLAB（DWARF 3 / DWARF mini / Draco）</span>
+    <span data-page-node-id="Yu3EoEU7ElmqYkRh8HNffk"><i class="dot" style="background:var(--zwo)" data-page-node-id="hKrMjmpMkAZ0IaaOuMJu8n"></i>ZWO Seestar（S30 / S30 Pro / S50 / S50 Pro）</span>
+    <span data-page-node-id="RU2L1cicfkZIG0FOrALIZJ"><i class="dot" style="background:var(--diff)" data-page-node-id="FjCCj6GQFvUFeUj6QGZTC1"></i>绿色左侧标记 = 该行参数存在差异</span>
+  </div>
+  <div class="note" data-page-node-id="L184cZDARvqZZgI8OCn0ei"><b data-page-node-id="5ER3N7JqLQVgaqCSDDMAtN">数据说明：</b>本页原始数据由 <b data-page-node-id="bLokVWV1pFiVAjlVAa1kuM">Linea松果</b> 提供。Seestar S50 Pro、S30 Pro 与 S50 参数依据 ZWO / Seestar、Sony 官方资料复核（2026-08-27）；S50 Pro 于 2026-09-10 依据官方规格页与发售信息二次复核：长焦传感器 OmniVision OS08B10、广角 Sony IMX586；读噪、满阱与 QE 官方未公开暂不采用同芯片相机数据（ADC 依 v15 对比表按芯片规格标注 12-bit），轴向视场及模拟画幅均明确标注为几何换算；S50 Pro 人民币首发价 ¥4499（老用户 ¥3999），国际 $999 / €999。2026-09-10 依据 Linea松果 v15 对比表三次校准定价、ADC、目标跟踪、机内功能、长曝光与模拟画幅。DWARFLAB Draco 参数依据 DWARFLAB 官方产品页规格表录入（2026-09-10）：长焦 OmniVision OV50Q40、广角 OV50E40、独立导星相机 OS04C1B，支持物理消场旋与 300s 单帧曝光；ADC、读噪、满阱与 QE 官方未公开，焦比及模拟画幅为几何换算。</div>
+</footer>
+</div>
+<script>
+const DATA = {"headers": ["", "DWARF 3", "DWARF mini", "Seestar S30", "Seestar S30 Pro", "Seestar S50"], "rows": [["品牌", "DWARFLAB", "DWARFLAB", "ZWO", "ZWO", "ZWO"], ["上市时间", "2024年12月", "2025年12月30日", "2024年11月1日", "2025年12月31日", "2023年4月13日"], ["定价", "2999（专属优惠）", "2199(专属优惠)", "2499（专属优惠）", "3499（专属优惠）", "3499"], ["连接方式", "Wi-Fi、蓝牙、NFC、USB-C", "Wi-Fi、蓝牙、NFC、USB-C", "Wi-Fi、蓝牙、USB-C", "Wi-Fi、蓝牙、NFC、USB-C", "Wi-Fi、蓝牙、USB-C"], ["Wi-Fi 功能", "Wi-Fi 5G/2.4G", "Wi-Fi 5G/2.4G", "Wi-Fi 5G/2.4G", "Wi-Fi 5G/2.4G", "Wi-Fi 5G/2.4G"], ["数据传输", "Type-C、Wi-Fi", "Type-C、Wi-Fi", "Type-C、Wi-Fi", "Type-C、Wi-Fi", "Type-C、Wi-Fi"], ["NFC", "支持", "支持", "无", "支持", "无"], ["CPU 核心", "4-Core Cortex-A7 1.5GHz", "—", "Rockchip RV1126 4-Core Cortex-A7（猜测）", "—", "Rockchip RV1126 4-Core Cortex-A7"], ["平台（手机端）", "iOS & 安卓", "iOS & 安卓", "iOS & 安卓", "iOS & 安卓", "iOS & 安卓"], ["光学镜组", "潜望式APO", "折射式APO", "折射复消色差三片APO", "折射复消色差四片APO", "折射复消色差三片APO"], ["焦比（F比）", "F/4.3", "f/5", "f/5", "f/5.3", "f/5"], ["【长焦】孔径", "35 mm", "30 mm", "30 mm", "30 mm", "50 mm"], ["【长焦】焦距", "150 mm", "150 mm", "150 mm", "160 mm", "250 mm"], ["【长焦】等效焦距(观星模式下约)", "≈737 mm", "≈1000mm", "≈1000mm", "≈520mm", "≈1600mm"], ["【长焦】视场角（FOV）", "≈2.95°× 1.66°", "≈2.14°× 1.2°", "≈1.2°× 2.13°", "≈2.24°× 3.99°", "≈0.72° × 1.28°"], ["【长焦】传感器", "Sony IMX678", "Sony IMX662", "Sony IMX662", "Sony IMX585", "Sony IMX462"], ["【长焦】传感器格式", "1/1.8\"（芯片规格）", "1/2.8\"（芯片规格）", "1/2.8\"（芯片规格）", "1/1.2\"（芯片规格）", "1/2.8\"（芯片规格）"], ["【长焦】像素尺寸", "2.0 μm（芯片规格）", "2.9 μm（芯片规格）", "2.9 μm（芯片规格）", "2.9 μm（芯片规格）", "2.9 μm（芯片规格）"], ["【长焦】ADC 位深", "12-bit（芯片规格）", "12-bit（芯片规格）", "12-bit（芯片规格）", "12-bit（芯片规格）", "12-bit（芯片规格）"], ["【长焦】读出噪声", "≈0.6e（芯片规格）", "≈0.8 e（芯片规格）", "≈0.8 e（芯片规格）", "≈0.7 e（芯片规格）", "≈0.47e（芯片规格）"], ["【长焦】满阱电荷", "≈11.27 ke（芯片规格）", "≈38.2 ke（芯片规格）", "≈38.2 ke（芯片规格）", "≈40 ke（芯片规格）", "≈11.2 ke（芯片规格）"], ["【长焦】量子效率（QE）", "峰值≈83%（芯片规格）", "峰值≈91%（芯片规格）", "峰值≈91%（芯片规格）", "峰值≈88%（芯片规格）", "峰值≈80%（芯片规格）"], ["【长焦】最大分辨率", "3840 × 2160 4K横屏", "1920 × 1080 1080p横屏", "1080 × 1920 1080p竖屏", "2160 × 3840 4K竖屏", "1920 × 1080 1080p竖屏"], ["【长焦】有效像素", "≈800 万", "≈200 万", "≈200 万", "≈800 万", "≈200 万"], ["【广角】孔径", "3.4 mm", "—", "4mm", "—", ""], ["【广角】焦距", "6.7 mm", "6.7 mm", "", "5.96 mm", ""], ["【广角】等效全画幅焦距", "45 mm", "45 mm", "105mm", "35mm", ""], ["【广角】视场角（FOV）", "≈40.48°× 30.36°", "≈45.06°× 25.93°", "≈23.2°", "≈32.13°× 54.22°", "无广角镜头"], ["【广角】传感器", "Sony IMX307", "OmniVision OS02K10", "", "Sony IMX586", ""], ["【广角】传感器尺寸", "1/2.8\"", "1/2.8\"", "", "1/2\"", ""], ["【广角】像素尺寸", "2.9 μm（传感器指标）", "2.9 μm（传感器指标）", "", "1.6μm（fit文件读取值）", ""], ["【广角】最大分辨率", "1920 × 1080 1080p横屏", "1920 × 1080 1080p横屏", "", "2160 × 3840 4K竖屏", ""], ["【广角】有效像素", "≈200 万", "≈200 万", "仅能用于日常拍摄，不能用于长曝银河拍摄", "≈800 万", ""], ["存储", "128 GB", "64 GB", "64 GB", "128 GB", "64 GB"], ["电池容量", "10000 mAh", "7000 mAh", "6000 mAh", "6000 mAh", "6000 mAh"], ["续航时间", "约4h", "约3h", "约6h", "约6h", "约5h"], ["充电接口", "Type-C", "Type-C", "Type-C", "Type-C", "Type-C"], ["充电环境温度", "0–45℃", "0–45℃", "0–40℃", "0–40℃", "0–40℃"], ["使用环境温度", "-10–45℃（建议）", "-20–45℃（建议）", "-10–40℃（建议）", "-10–40℃（建议）", "0–40℃（建议）"], ["尺寸（宽×高×厚）", "222 × 142 × 65 mm", "100 × 183 × 60 mm", "210 × 140 × 80 mm", "210 × 140 × 80 mm", "142.5 × 130 × 257 mm"], ["重量", "1.35 kg", "0.84 kg", "1.65 kg", "1.68 kg", "2.5 kg"], ["安装接口（脚位）", "1/4螺口", "1/4螺口", "3/8螺口", "3/8螺口", "3/8螺口"], ["Wi-Fi 桥接", "支持", "支持", "支持", "支持", "支持"], ["最近对焦距离", "5m ~ ∞", "—", "6 m ~ ∞", "—", "30 m ~ ∞"], ["附赠内容", "ND太阳防护镜、数据线、收纳包、擦镜布", "ND太阳防护镜、数据线、擦镜布", "太阳防护镜、数据线、收纳包、金属脚架", "太阳防护镜、数据线、收纳包、金属脚架", "太阳防护镜、数据线、收纳包、碳纤维脚架"], ["目标跟踪", "支持（手动框选、鸟类、飞机、猫狗识别等）", "支持", "支持（手动框选）", "支持（手动框选）", "支持（手动框选）"], ["内滤镜", "标准、天文、双窄带", "天文、双窄带、暗场滤镜", "天文、光害（双窄带）", "天文、光害（双窄带）", "天文、光害（双窄带）"], ["内后期", "特色一键天文后期、全景拼接、延时、星轨", "特色一键天文后期、延时、星轨", "景平衡、降噪、调色、延时、标注等", "景平衡、降噪、调色、广角标注、延时、8K拼接、天地景、星轨", "支持背景平衡、降噪、调色、延时标注等"], ["社交属性", "测试中", "测试中", "app内全球化社交", "app内全球化社交", "app内全球化社交"], ["星道仪模式", "支持", "支持", "支持", "支持", "支持"], ["长曝光", "最高单张120s，建议60s", "测试版最高单张180s，建议120s", "最高单张60s可用", "最高单张60s可用", "最高单张30s可用，建议20s"], ["长焦模拟", "", "", "", "", ""], ["星图软件模拟传感器x分辨率", "3840px", "1920px", "1080px", "2160px", "1080px"], ["星图软件模拟传感器y分辨率", "2160px", "1080px", "1920px", "3840px", "1920px"], ["星图软件模拟传感器感光芯片宽度", "7.73mm", "5.6mm", "3.14mm", "6.26mm", "3.14mm"], ["星图软件模拟传感器感光芯片高度", "4.35mm", "3.14mm", "5.58mm", "11.15mm", "5.59mm"], ["星图软件模拟望远镜焦距", "150mm", "150mm", "150mm", "160mm", "250mm"], ["星图软件模拟望远镜直径", "35mm", "30mm", "30mm", "30mm", "50mm"], ["广角模拟", "", "", "", "", ""], ["星图软件模拟传感器x分辨率", "1920px", "1920px", "-", "2160px", "-"], ["星图软件模拟传感器y分辨率", "1080px", "1080px", "", "3840px", ""], ["星图软件模拟传感器感光芯片宽度", "4.93mm", "4.93mm", "", "3.43mm", ""], ["星图软件模拟传感器感光芯片高度", "3.63mm", "3.63mm", "", "6.1mm", ""], ["星图软件模拟望远镜焦距", "6.7mm", "6.7mm", "", "5.96mm", ""], ["星图软件模拟望远镜直径", "3.4mm", "3.4mm", "", "3.5mm", ""]]};
+
+const S50_PRO_VALUES = [
+  "ZWO", // 品牌
+  "2026年8月25日（9月1日起发货）", // 上市时间
+  "首发 ¥4499（老用户 ¥3999）；$999 / €999", // 定价
+  "Wi-Fi、蓝牙、NFC、USB-C", // 连接方式
+  "Wi-Fi 5G/2.4G", // Wi-Fi 功能
+  "Type-C、Wi-Fi", // 数据传输
+  "支持", // NFC
+  "—（官方未公开）", // CPU 核心
+  "iOS & 安卓", // 平台（手机端）
+  "四片式复消色差 APO（含 ED）", // 光学镜组
+  "F/5.2（长焦）/ F/1.75（广角）", // 焦比
+  "50 mm", // 长焦孔径
+  "260 mm", // 长焦焦距
+  "≈880 mm", // 长焦等效焦距
+  "2.8°（对角线，官方）；约1.38° × 2.45°（几何换算）", // 长焦视场
+  "OmniVision OS08B10（1/1.2\"、2.9 μm、830 万像素）", // 长焦传感器
+  "1/1.2\"（官方规格）", // 长焦传感器格式
+  "2.9 μm（官方规格）", // 长焦像素尺寸
+  "12-bit（芯片规格）", // ADC 位深
+  "—（设备增益曲线未公开）", // 读出噪声
+  "—（S50 Pro 官方未公开）", // 满阱电荷
+  "—（S50 Pro 官方未公开）", // 量子效率
+  "2160 × 3840 4K竖屏", // 长焦最大分辨率
+  "≈830 万（8.3 MP）", // 长焦有效像素
+  "3.4 mm", // 广角孔径
+  "6 mm", // 广角焦距
+  "35 mm", // 广角等效焦距
+  "63°（对角线，竖画幅）", // 广角视场
+  "Sony IMX586（1/2\"、1.6 μm、830 万像素）", // 广角传感器
+  "1/2\"（官方规格）", // 广角传感器尺寸
+  "1.6 μm（官方规格）", // 广角像素尺寸
+  "2160 × 3840 4K竖屏", // 广角最大分辨率
+  "≈830 万（8.3 MP输出）", // 广角有效像素
+  "128 GB eMMC（约100 GB可用）", // 存储
+  "10000 mAh", // 电池容量
+  "约9h（ZWO 实验室条件：>10℃、长焦经纬仪实时叠加、App≥3.3.1；低温或广角约7–9h）", // 续航时间
+  "Type-C（5V/3A、12V/3A）", // 充电接口
+  "0–40℃", // 充电环境温度
+  "-10–40℃（建议）", // 使用环境温度
+  "140 × 149 × 268 mm（折叠）", // 尺寸
+  "2.8 kg（仅主机）", // 重量
+  "3/8-16螺口", // 安装接口
+  "支持（Station Mode、网络远控）", // Wi-Fi 桥接
+  "长焦15 m ~ ∞；广角0.1 m ~ ∞", // 最近对焦距离
+  "太阳防护镜、USB-C线、保护箱、可调碳纤维脚架、安全说明、快速指南、天文主题贴纸", // 附赠内容
+  "支持（天体 GOTO、自动定位及跟踪、手动框选）", // 目标跟踪
+  "UV/IR-Cut（长焦+广角）、双窄光害滤镜 OIII 30 nm / Hα 20 nm（仅长焦）、暗场滤镜（仅长焦）", // 内滤镜
+  "一键增强、减星/去星、降噪、自动DBE、天文测光、调色、8K拼接、天地景、延时、星轨、星座识别、语音助手、天网、双摄同拍", // 内后期
+  "App内 AstroImg 全球天文社区", // 社交属性
+  "支持（赤道仪/EQ模式，近零回差精密驱动）", // 星道仪模式
+  "最高单张60s稳定", // 长曝光
+  "", // 长焦模拟分区
+  "2160px", // 长焦模拟 x 分辨率
+  "3840px", // 长焦模拟 y 分辨率
+  "6.26mm（按输出画幅换算）", // 长焦模拟传感器宽度
+  "11.15mm（按输出画幅换算）", // 长焦模拟传感器高度
+  "260mm", // 长焦模拟焦距
+  "50mm", // 长焦模拟直径
+  "", // 广角模拟分区
+  "2160px", // 广角模拟 x 分辨率
+  "3840px", // 广角模拟 y 分辨率
+  "3.46mm（有效输出画幅估算）", // 广角模拟传感器宽度
+  "6.14mm（有效输出画幅估算）", // 广角模拟传感器高度
+  "6mm", // 广角模拟焦距
+  "3.4mm" // 广角模拟直径
+];
+
+if (S50_PRO_VALUES.length !== DATA.rows.length) {
+  throw new Error("Seestar S50 Pro 参数数量与 DATA.rows 不一致");
+}
+DATA.headers.push("Seestar S50 Pro");
+DATA.rows.forEach((row, index) => row.push(S50_PRO_VALUES[index]));
+
+// 2026-09-10：依据 DWARFLAB 官方产品页规格表新增 Draco（插在 DWARF mini 之后，保持品牌分组）。
+const DRACO_VALUES = [
+  "DWARFLAB", // 品牌
+  "2026年9月（预售，下单后约两个月内发货）", // 上市时间
+  "标准版 ¥8499（京东官旗）；$1,299 首发（至9/14，常规 $1,399）；SHO 版 $1,499", // 定价
+  "Wi-Fi、蓝牙、NFC、USB-C（USB 3.0）、USB 以太网", // 连接方式
+  "Wi-Fi（距离≤10m）", // Wi-Fi 功能
+  "Type-C（USB 3.0）、Wi-Fi、USB 以太网", // 数据传输
+  "支持", // NFC
+  "—（官方未公开）", // CPU 核心
+  "iOS & 安卓", // 平台（手机端）
+  "消像差校正镜组（官方未公开片数）", // 光学镜组
+  "F/3.8（长焦，换算）/ F/1.9（广角，换算）", // 焦比
+  "90 mm", // 长焦孔径
+  "340 mm", // 长焦焦距
+  "1200 mm（天文模式）/ 1280 mm（非天文模式）", // 长焦等效焦距
+  "D 2.059°（天文模式）；D 1.936°（其他模式）；导星 H0.905°×V0.512°（官方）", // 长焦视场
+  "OmniVision OV50Q40（另含导星相机 OS04C1B 黑白 409 万像素）", // 长焦传感器
+  "1/1.3\"（官方规格，未裁切）", // 长焦传感器格式
+  "1.197 μm 原生 / 2.394 μm（2×2 合并）", // 长焦像素尺寸
+  "—（官方未公开）", // ADC 位深
+  "—（官方未公开）", // 读出噪声
+  "—（官方未公开）", // 满阱电荷
+  "—（官方未公开）", // 量子效率
+  "输出约 12 MP（2×2 合并，4:3）；传感器 50.33 MP", // 长焦最大分辨率
+  "传感器 50.33 MP；输出 ≈1200 万（12 MP）", // 长焦有效像素
+  "2.96 mm", // 广角孔径
+  "5.56 mm", // 广角焦距
+  "23.3 mm", // 广角等效焦距
+  "D 85.74° / H 73.20° / V 58.23°（官方）", // 广角视场
+  "OmniVision OV50E40", // 广角传感器
+  "1/1.55\"（官方宣传）", // 广角传感器尺寸
+  "—（官方未单列；输出为 2×2 合并）", // 广角像素尺寸
+  "输出约 12 MP（2×2 合并，4:3）", // 广角最大分辨率
+  "传感器 50.33 MP；输出 ≈1200 万（12 MP）", // 广角有效像素
+  "128 GB（内置）", // 存储
+  "10000 mAh（7.7V）", // 电池容量
+  "约5h（官方）", // 续航时间
+  "Type-C（支持外部 USB 充电）", // 充电接口
+  "—（官方未公开）", // 充电环境温度
+  "-20–45℃", // 使用环境温度
+  "385.85 × 196.28 × 133.25 mm", // 尺寸
+  "5.5 kg", // 重量
+  "3/8\"×1 + 1/4\"×2", // 安装接口
+  "—（官方未公开；支持 USB 有线以太网远程部署）", // Wi-Fi 桥接
+  "长焦 25 m ~ ∞", // 最近对焦距离
+  "三脚架、USB-C 数据线、擦镜布（SHO 版另附外置磁吸 ND 滤镜）", // 附赠内容
+  "支持（GOTO、自动跟踪；内置导星镜实时校正 + 物理 CMOS 旋转消场旋）", // 目标跟踪
+  "长焦 Astro 440–680nm、暗场、H+O 双窄带（OIII 500.7 / Hα 656.3，FWHM 13nm）、ND OD5；广角 VIS 430–565nm + ND OD5（SHO 版增 S+O：S II 671.6nm）", // 内滤镜
+  "马赛克拼接（扩幅至约3×）、多夜叠加、坏帧剔除重堆、太阳系模式、计划拍摄、银河/星轨/延时", // 内后期
+  "—（官方未单列）", // 社交属性
+  "支持（全金属底座 EQ 模式，无需外置赤道仪）", // 星道仪模式
+  "最高单张 300s（内置导星 + 物理消场旋）", // 长曝光
+  "", // 长焦模拟分区
+  "4000px（12MP 4:3 输出估算）", // 长焦模拟 x 分辨率
+  "3000px（12MP 4:3 输出估算）", // 长焦模拟 y 分辨率
+  "9.58mm（按 2.394μm 合并像素换算）", // 长焦模拟传感器宽度
+  "7.18mm（按 2.394μm 合并像素换算）", // 长焦模拟传感器高度
+  "340mm", // 长焦模拟焦距
+  "90mm", // 长焦模拟直径
+  "", // 广角模拟分区
+  "4000px（12MP 4:3 输出估算）", // 广角模拟 x 分辨率
+  "3000px（12MP 4:3 输出估算）", // 广角模拟 y 分辨率
+  "—（广角像素尺寸官方未公开）", // 广角模拟传感器宽度
+  "—（广角像素尺寸官方未公开）", // 广角模拟传感器高度
+  "5.56mm", // 广角模拟焦距
+  "2.96mm" // 广角模拟直径
+];
+
+if (DRACO_VALUES.length !== DATA.rows.length) {
+  throw new Error("DWARF Draco 参数数量与 DATA.rows 不一致");
+}
+DATA.headers.splice(3, 0, "DWARF Draco");
+DATA.rows.forEach((row, index) => row.splice(3, 0, DRACO_VALUES[index]));
+
+// 2026-08-27：依据 ZWO / Seestar 官方产品页与用户手册复核既有机型。
+const OFFICIAL_PARAMETER_CORRECTIONS = {
+  "Seestar S30 Pro": {
+    "光学镜组": "折射复消色差四片 APO（含 ED 玻璃）",
+    "【长焦】视场角（FOV）": "4.6°（对角线，官方）；约2.24° × 3.99°（几何换算）",
+    "【长焦】有效像素": "≈830 万（8.3 MP）",
+    "【广角】孔径": "3.4 mm",
+    "【广角】焦距": "6 mm",
+    "【广角】视场角（FOV）": "63°（对角线，官方）；约32.13° × 54.22°（几何换算）",
+    "【广角】有效像素": "≈830 万（8.3 MP）",
+    "最近对焦距离": "长焦6 m ~ ∞；广角0.1 m ~ ∞",
+    "重量": "1.65 kg（仅主机）",
+    "星图软件模拟望远镜焦距": "6mm",
+    "星图软件模拟望远镜直径": "3.4mm"
+  },
+  "Seestar S50": {
+    "【长焦】视场角（FOV）": "0.73° × 1.29°（官方）",
+    "续航时间": "约6h（ZWO 实验室条件）"
+  }
+};
+
+Object.entries(OFFICIAL_PARAMETER_CORRECTIONS).forEach(([model, corrections])=>{
+  const column = DATA.headers.indexOf(model);
+  if(column<0) throw new Error("参数修订找不到机型："+model);
+  Object.entries(corrections).forEach(([label, value])=>{
+    const matches = DATA.rows.filter(row=>row[0]===label);
+    if(matches.length===0) throw new Error("参数修订找不到字段："+label);
+    // 星图模拟字段在长焦、广角分区各出现一次；只修订最后出现的广角字段。
+    const row = label.indexOf("星图软件模拟")===0 ? matches[matches.length-1] : matches[0];
+    row[column] = value;
+  });
+});
+
+const eqModeRow = DATA.rows.find(row=>row[0]==="星道仪模式");
+if(eqModeRow) eqModeRow[0] = "赤道仪（EQ）模式";
+
+const brand = (h)=> h.indexOf("DWARF")===0 ? "dwarf" : "zwo";
+const head = document.getElementById("head");
+const body = document.getElementById("body");
+const cardsView = document.getElementById("cardsView");
+const search = document.getElementById("search");
+const diffOnly = document.getElementById("diffOnly");
+const hl = document.getElementById("hl");
+const count = document.getElementById("count");
+const models = DATA.headers.slice(1);
+const mobileMode = window.matchMedia("(max-width:760px)");
+const mobileFocusModels = ["Seestar S50", "Seestar S50 Pro"];
+const visible = new Set(mobileMode.matches ? mobileFocusModels : models);
+const pfStatus = document.getElementById("pfStatus");
+const mobilePreset = document.getElementById("mobilePreset");
+const visibleModels = ()=> models.filter(m=>visible.has(m));
+
+const CART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l2.4 12.4a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L21 7H6"/><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/></svg>';
+const LINKS = {
+  "DWARF mini": [
+    {t:"淘宝", cls:"taobao", u:"https://s.click.taobao.com/t?e=m%3D2%26s%3DNDoAyCZmfgxw4vFB6t2Z2ueEDrYVVa64yK8Cckff7TVRAdhuF14FMV450ccs5Y6%2BMMgx22UI05bgorWWA8OtrBEM2C1%2Bvq16Fe9TFSaLhz0F5gUfWMEmQAWaJnJ3wsfaOlGkMkr%2BSUUYmUGuVZn0uT5SSRjBz8L7BG6OKCAoJtA56ZoUzm0cdmwCZH9%2BF3YFsfBrpyXiZF9kKFdg%2BRSrtZtr%2BZKPBIj8zf0RrXVKZxaWHAI05%2FRHJFRudUrVe%2BMtFN7%2BU%2BDmbKPr5MgZgNgtDagodk2PM76qXLznKGOV1sr0JlhLk0Jl4Ttro1jUNunhHnIqEUt5J1LFHA1dh7RNJSu76ZJbxzRO558XKNZHnKNOuwqku3rsRKzh%2Fju5BhT7P%2Bl6OUUqDmnnOQoNtobyodV4Zbi3yqCfr2l3ZG3K4V1r4iB5KxxbdJM7%2B6GsmlmU&union_lens=lensId:TAPI@1780662538@213d439b_16e6_19e97c20f25_631f@01&cont_id=BV1Tw716nEWY"},
+    {t:"京东", cls:"jd", u:"https://union-click.jd.com/jdc?p=JF8BAVQJK1olXwECUFdUDE0VAV8IGlgUWg4CUV9dCkkeA19MRANLAjZbERscSkAJHTdNTwcKBlMdBgABFksWAG4PE1sQXAYAVlddFxJSXzIGXwRNA1l-AAsFWC5HVWMLdVp7XTYYLx9aahJOcQ91GBpQL20YPDxaSAlRD2M4G18SVAMAVVZVCXsXAm4JElkcVQcHZG5dDXtWbW8AGFkTXQMDZFxcCUsTCmkLHV4lXQALVVlaC08VCmwKEmsVVQIyJ4jHoJ6coLe5o4-d09Ki725tOEgnM2wJGVgcXAMBVFszDUsWA2cNG1kWVGgAVF9eCEMeAWkNK1slXjZcOl9aWB4fBWxcdQdVXEBbHxkWZkMVAm0IE1gRbQQDVVxfOHsnVysBaAAVCg9aKCQiCBEeYQl-Xl5qXVwLNjgrTU4ebW0BHzxMCWJEFBkibRZKZgxAemsQbQYAVFdt&e=17819868_BV1Tw716nEWY_1785248342881q10a88a61a58q5988"}
+  ],
+  "DWARF Draco": [
+    {t:"京东", cls:"jd", u:"https://union-click.jd.com/jdc?e=&p=JF8BAUoJK1olXwECUFdUDE0VAV8IGlgXWAAFUlZcCEgQC19MRANLAjZbERscSkAJHTdNTwcKBlMdBgABFksWAG0NHVwTVQcCV1lVFxJSXzI4RCFHX19EIx44CzUWXWpqYVhRCFhwAlJROE8RAGkMGloUXjYCVV9cCUIfCmcKK18TMwdsVFdYZklFCmhcTllBXAFQVg0KW0wnA244WjUVVQUAUl5YCXsWM28OElIdWwcDUlxZDkknA2cMK4y889CO8orkopylgV84K1glbTYCZF1tViUWBGsMHVwXVGheERoNVRgQBwEPHV4QVQUHZFxcCUkVM1_WlutlXAR7K140bRhVCxpgcwJIg4uyRSI5DEsWBn44HyscI3FGVVtbACh-Rw5hcBoXHQ9rED88ehZ-BBcBdVkRXgJmAwQuDxNpeTZ_chxsKzYCZF5fCEInAl8"}
+  ],
+  "DWARF 3": [
+    {t:"淘宝", cls:"taobao", u:"https://s.click.taobao.com/t?e=m%3D2%26s%3DDxjubvVl5vVw4vFB6t2Z2ueEDrYVVa64XoO8tOebS%2BdRAdhuF14FMV450ccs5Y6%2BMMgx22UI05bgorWWA8OtrBEM2C1%2Bvq16Fe9TFSaLhz0F5gUfWMEmQAWaJnJ3wsfaOlGkMkr%2BSUUYmUGuVZn0uYL4CYjvoVHNQc4ee5aZdfg56ZoUzm0cdmwCZH9%2BF3YFhl0bDI17EEfk5CLwEwCZ88muBNaDV1pDG0x1FGltnh88qzB4FyYn9CfaDsYECNtnaN%2B97OtD207r5MgZgNgtDagodk2PM76qXLznKGOV1sr0JlhLk0Jl4Ttro1jUNunhHnIqEUt5J1LFHA1dh7RNJSu76ZJbxzROiC4r5Qo%2F%2F9ho7JiUkA85NR83sbOxH3rnTm95fOCY0yJe2iGqCsHSmguxmNB14AJVwZ%2Brz7bpNPQCJN6%2FJqhJoEx0inWuvg%2Fd&union_lens=lensId:TAPI@1780662538@213116c7_14fa_19e97c20f27_e24a@01&cont_id=BV1Tw716nEWY"},
+    {t:"京东", cls:"jd", u:"https://union-click.jd.com/jdc?p=JF8BAg0JK1olXwECUFdUDE0VAV8IGlsSWgYHVFpcD0MSAF9MRANLAjZbERscSkAJHTRQRA1CCVkdDwtCWhVLHTdNTwcKBENeCVAfUg8bcAloE1kcX3FCCwE2ATVAVShIUBx-VHhVAhkdQwx3bW1LXgloKW9LJyw6fgBJegZpRkxVUXJ7JDwpUTRQdAZ8fSxmIll1PSYFbChFRRt6QT13FHpENCsueyxOayZ_Q1pzP09QFD4vUiJ1AhNObAR9OHIDAQkpChF1dDzwVaBl8GihKK3RqMSouCUJjajVrbChlVXBgPDs-CShUdBZweywULlF2LTY4fBJ0RBlhYzJhP2YWVittAT50Yi9SUztwImRZIB4HSR8NfRhgXVcZbQYGU1dYCkofC244G1oUXA8AXVZcDXsnA2o4WjUVVQUAUl5YCXsVAm4IH1ITXgAHZF5bAUoQBGwMGVISWQQyVFZZODjBmcfdkPjN7L7W3NCJqPAnM18LK2sWXAQBXV9YC0sSbWoIGlsdWAYAV1czCksWAG8AElkTWDYCV25eOBV5AjwIT1kcDgZsCB5cThMWBC5mE1kWWwEHUVptCkoWAW04K2tmO2YKVldffwtIXAQBZQxDGkZJEzVUdhxBRC9DXDt7X0VHBiMpYQJkcQh-UAVsNGdfZFttCEkXCl8&e=17819868_BV1Tw716nEWY_1785248342881q10a88a61a58q5988"}
+  ],
+  "Seestar S30": [
+    {t:"淘宝", cls:"taobao", u:"https://uland.taobao.com/ccoupon/edetail?e=NXWVsBU0k%2FulhHvvyUNXZfh8CuWt5YH5OVuOuRD5gLJMmdsrkidbOQsS8ET5mN3JImx4K%2BI7ho%2FPswYDoAgRfkoiNtq6WkApTQGFnQcdJYb7U6P8%2Fl5SldrqoF%2Bmv%2B20Y6s%2BLAjYihZ2hpSzkXEPijTU8DC75RBxPpakwmwbhEwBQJlgNw7nwhC2RUx63i68CFMMGD%2BzLYB95YJeD9chHNJXOp2QTM7BmyV8acFZidVnO6BD5up2eErsiMPSDY1Vobuu9w1yxCFtsAJXHAr50mj9ofypQzPJDUqyomLCcydlBdz%2FWQ1J2mnoE5DDqrYBcV7d%2B0glbKi9K7K8OOlweVprnTuDplHEbzLA8W7V47QIOfeKMPHrcNyYh51mxclMtxl6Um37OPIe1BWFPGbP3183tnRTOPhHUYYVtD40VsRE4WP5rwPHFFD9ZzTfOOXeDNS%2F5hK2vLt%2BOHfs5nLQGA%3D%3D&traceId=0bf89d1217806625378543104e0d1a&union_lens=lensId:TAPI@1780662538@2133cff3_1484_19e97c20f29_aba1@01&cont_id=BV1Tw716nEWY"},
+    {t:"京东", cls:"jd", u:"https://union-click.jd.com/jdc?p=JF8BAUkJK1olXDYCVV9fCEITB2YKE1IlGVlaCgFtUQ5SQi0DBUVNGFJeSwUIFxlJX3EIGloXXQ8GUFdfAEIIWipURlVRAl5cCyIJXRNHZj9eF1h7XGgCZAEbex5BCghwe193J3t_EyEJTTxhZTkEF2sVWQELUVxcAEMWM28JGlocXw8KVVttOEsSMzlmG1oUXAMLUl1dAXsVAm4IH1ITXgAHZF5bAUoQBGwMGVIVVQQyVFZZODjBmcfdkPjN7L7W3NCJqPAnM18LK2sWXAQBXV9YC0sSbWoIGlsdWAYAV1czCksWAG8AElkTWDYCZF1tViUWBD9dE10WDmheFF8bUQBTUQEAGVoRXgADVW5fCUoVAV84KyBcVHR8JCAiWC4fAB9vGCNhAl8HVy46CzNjXDYNEjUXAlpGAD0NdxFtcR9jGFlLWU4yUW5dCkseMw&e=17819868_BV1Tw716nEWY_1785248342881q10a88a61a58q5988"}
+  ],
+  "Seestar S30 Pro": [
+    {t:"淘宝", cls:"taobao", u:"https://uland.taobao.com/ccoupon/edetail?e=NXWVsBU0k%2FulhHvvyUNXZfh8CuWt5YH5OVuOuRD5gLJMmdsrkidbOQsS8ET5mN3JImx4K%2BI7ho%2FPswYDoAgRfkoiNtq6WkApTQGFnQcdJYb7U6P8%2Fl5SldrqoF%2Bmv%2B20Y6s%2BLAjYihZ2hpSzkXEPijTU8DC75RBxPpakwmwbhEwBQJlgNw7nwhC2RUx63i68CFMMGD%2BzLYB95YJeD9chHNJXOp2QTM7BmyV8acFZidVnO6BD5up2eErsiMPSDY1Vobuu9w1yxCFtsAJXHAr50mj9ofypQzPJDUqyomLCcydlBdz%2FWQ1J2mnoE5DDqrYBcV7d%2B0glbKi9K7K8OOlweVprnTuDplHEbzLA8W7V47QIOfeKMPHrcNyYh51mxclMtxl6Um37OPIe1BWFPGbP3183tnRTOPhHUYYVtD40VsRE4WP5rwPHFFD9ZzTfOOXeDNS%2F5hK2vLt%2BOHfs5nLQGA%3D%3D&traceId=0bf89d1217806625378543104e0d1a&union_lens=lensId:TAPI@1780662538@2133cff3_1484_19e97c20f29_aba1@01&cont_id=BV1Tw716nEWY"},
+    {t:"京东", cls:"jd", u:"https://union-click.jd.com/jdc?p=JF8BAUkJK1olXDYCVV9fCEITB2YKE1IlGVlaCgFtUQ5SQi0DBUVNGFJeSwUIFxlJX3EIGloXXQ8GUFdfAEIIWipURlVRAl5cCyIJXRNHZj9eF1h7XGgCZAEbex5BCghwe193J3t_EyEJTTxhZTkEF2sVWQELUVxcAEMWM28JGlocXw8KVVttOEsSMzlmG1oUXAMLUl1dAXsVAm4IH1ITXgAHZF5bAUoQBGwMGVIVVQQyVFZZODjBmcfdkPjN7L7W3NCJqPAnM18LK2sWXAQBXV9YC0sSbWoIGlsdWAYAV1czCksWAG8AElkTWDYCZF1tViUWBD9dE10WDmheFF8bUQBTUQEAGVoRXgADVW5fCUoVAV84KyBcVHR8JCAiWC4fAB9vGCNhAl8HVy46CzNjXDYNEjUXAlpGAD0NdxFtcR9jGFlLWU4yUW5dCkseMw&e=17819868_BV1Tw716nEWY_1785248342881q10a88a61a58q5988"}
+  ]
+};
+function buyBtns(model){
+  const arr = LINKS[model]; if(!arr) return "";
+  return arr.map(l=>'<a class="buy '+l.cls+'" href="'+l.u.replace(/&/g,"&amp;")+'" target="_blank" rel="noopener">'+CART+l.t+'</a>').join("");
+}
+
+function buildHead(){
+  const vm = visibleModels();
+  const dc = vm.filter(m=>brand(m)==="dwarf").length;
+  const zc = vm.length - dc;
+  let grp = '<th class="param">参数</th>';
+  if(dc>0) grp += '<th class="grp-dwarf" colspan="'+dc+'">DWARFLAB</th>';
+  if(zc>0) grp += '<th class="grp-zwo" colspan="'+zc+'">ZWO Seestar</th>';
+  head.innerHTML =
+    '<tr>'+grp+'</tr>' +
+    '<tr><th class="param"></th>' +
+      vm.map(m=>'<th class="model '+brand(m)+'">'+m+'<small>'+(brand(m)==="dwarf"?"DWARFLAB":"ZWO")+'</small></th>').join("") +
+    '</tr>';
+}
+
+function isNA(v){
+  return !v || v==="—" || v==="-" || v.indexOf("—（")===0;
+}
+function distinctVals(vals){
+  const s = new Set(vals.filter(v=>!isNA(v)));
+  return s.size;
+}
+function valClass(v){
+  if(isNA(v)) return "na";
+  if(v==="支持"||v==="有") return "val-good";
+  if(v==="无") return "val-bad";
+  return "";
+}
+function computeDiff(){
+  let t=0;
+  DATA.rows.forEach(r=>{
+    if(r[0]==="长焦模拟"||r[0]==="广角模拟") return;
+    const visVals = r.slice(1).filter((_,i)=>visible.has(models[i]));
+    if(distinctVals(visVals)>1) t++;
+  });
+  document.getElementById("statDiff").textContent = t;
+}
+
+function render(){
+  const q = search.value.trim().toLowerCase();
+  body.innerHTML=""; cardsView.innerHTML="";
+  let shown=0;
+  const vm = visibleModels();
+  DATA.rows.forEach(r=>{
+    const label=r[0];
+    const vals=r.slice(1);
+    if(q && !label.toLowerCase().includes(q) && !vals.join(" ").toLowerCase().includes(q)) return;
+    const isSection = (label==="长焦模拟"||label==="广角模拟");
+    if(isSection){
+      const tr=document.createElement("tr"); tr.className="section-row";
+      tr.innerHTML='<td colspan="'+(vm.length+1)+'"><span class="ico">✦</span>'+label+' · 星图软件模拟参数</td>';
+      body.appendChild(tr);
+      const c=document.createElement("div"); c.className="card section-card";
+      c.innerHTML='<h3><span class="ico">✦</span>'+label+' · 星图软件模拟参数</h3>';
+      cardsView.appendChild(c);
+      return;
+    }
+    const visVals = vals.filter((_,i)=>visible.has(models[i]));
+    const dv = distinctVals(visVals);
+    if(diffOnly.checked && dv<=1) return;
+    shown++;
+    const tr=document.createElement("tr");
+    let cells = '<th class="param">'+label+'</th>';
+    vals.forEach((v,i)=>{
+      if(!visible.has(models[i])) return;
+      const vc = valClass(v);
+      const diffCls = (hl.checked && dv>1 && !isNA(v)) ? "diff" : "";
+      if(label==="定价" && LINKS[models[i]]){
+        cells += '<td class="'+vc+' '+diffCls+'"><span class="price">'+(v||"—")+'</span><div class="buys">'+buyBtns(models[i])+'</div></td>';
+      } else {
+        cells += '<td class="'+vc+' '+diffCls+'">'+(v||"—")+'</td>';
+      }
+    });
+    tr.innerHTML=cells;
+    body.appendChild(tr);
+    const card=document.createElement("div");
+    card.className="card" + ((hl.checked && dv>1)?" diff":"");
+    let rowsHtml = '<h3>'+label+'</h3>';
+    vm.forEach(m=>{
+      const i = models.indexOf(m);
+      const v=vals[i]; const vc=valClass(v);
+      let right=(v||"—");
+      if(label==="定价" && LINKS[m]) right=(v||"—")+'<div class="buys">'+buyBtns(m)+'</div>';
+      rowsHtml += '<div class="row"><span class="m '+brand(m)+'">'+m+'</span><span class="v '+vc+'">'+right+'</span></div>';
+    });
+    card.innerHTML=rowsHtml;
+    cardsView.appendChild(card);
+  });
+  count.innerHTML = '显示 <b>'+shown+'</b> / '+DATA.rows.length+' 项参数';
+}
+function buildFilter(){
+  const pf = document.getElementById("productFilter");
+  pf.innerHTML = "";
+  const filterModels = mobileMode.matches
+    ? [...mobileFocusModels, ...models.filter(m=>!mobileFocusModels.includes(m))]
+    : models;
+  filterModels.forEach(m=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="pf-chip "+(visible.has(m)?"on":"off")+" "+brand(m);
+    b.innerHTML='<span class="pf-dot"></span><span class="pf-name">'+m+'</span>';
+    b.setAttribute("aria-pressed", visible.has(m).toString());
+    b.addEventListener("click",()=>{
+      if(visible.has(m) && visible.size===1) return;
+      if(visible.has(m)) visible.delete(m); else visible.add(m);
+      b.className="pf-chip "+(visible.has(m)?"on":"off")+" "+brand(m);
+      b.setAttribute("aria-pressed", visible.has(m).toString());
+      updateMobileFilterMeta();
+      buildHead(); computeDiff(); render();
+    });
+    pf.appendChild(b);
+  });
+  updateMobileFilterMeta();
+}
+
+function updateMobileFilterMeta(){
+  pfStatus.textContent = "已选 "+visible.size+" 款";
+  mobilePreset.textContent = visible.size===models.length ? "聚焦 S50" : "显示全部";
+  mobilePreset.setAttribute("aria-label", mobilePreset.textContent+"机型");
+}
+
+mobilePreset.addEventListener("click",()=>{
+  const target = visible.size===models.length ? mobileFocusModels : models;
+  visible.clear();
+  target.forEach(m=>visible.add(m));
+  buildFilter(); buildHead(); computeDiff(); render();
+});
+
+search.addEventListener("input",render);
+diffOnly.addEventListener("change",render);
+hl.addEventListener("change",render);
+buildFilter();
+buildHead();
+computeDiff();
+render();
+</script>
+</body>
+</html>
